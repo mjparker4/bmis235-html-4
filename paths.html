@@ -20,14 +20,13 @@
 <!-- ===== MENU ===== same menu on every page ===== -->
 <nav>
     <a href="index.html"><img src="img/home.png" alt="Home"></a>
-    <a href="kalua.html"><img src="img/kalua.png" alt="Kalua Pork"></a>
-    <a href="katsu.html"><img src="img/katsu.png" alt="Chicken Katsu"></a>
-    <a href="kalbi.html"><img src="img/kalbi.png" alt="Kalbi"></a>
     <a href="paths.html"><img src="img/paths.png" alt="Path Trainer"></a>
+    <a href="quiz.html"><img src="img/quiz.png" alt="Notes Quiz"></a>
+    <a href="cheatsheet.html"><img src="img/cheatsheet.png" alt="Cheat Sheet"></a>
 </nav>
 
 <h1>Path Trainer</h1>
-<p>Every link, image, and stylesheet on this site depends on one thing: a path that tells the browser where to find a file. Get one character wrong and you get a broken image or a "404 Not Found." This page is for practicing paths by doing them, using the real folder layout of this site.</p>
+<p>Every link, image, and stylesheet on this site depends on one thing: a path that tells the browser where to find a file. Get one character wrong and you get a broken image or a "404 Not Found." This page is for practicing paths by doing them, using the real folder layout of this site. Want the rules first? They're on the <a href="cheatsheet.html">Cheat Sheet</a> and at the bottom of this page.</p>
 
 <div class="pt">
 <div class="pt-layout">
@@ -93,19 +92,19 @@
     <summary>The rules, all in one place</summary>
     <ul>
       <li><strong>A path starts from the file you're editing.</strong> The browser starts in the folder that holds the current page, then follows the path from there.</li>
-      <li><strong>Same folder:</strong> just the file name. From <code>index.html</code> to the Kalbi page: <code>kalbi.html</code></li>
-      <li><strong>Into a folder:</strong> folder name, a slash, then the file. From <code>index.html</code> to an image: <code>img/kalbi.png</code></li>
-      <li><strong>Up a folder:</strong> <code>../</code> means "go up one level." From <code>recipes/spam-musubi.html</code> back to the stylesheet: <code>../styles.css</code></li>
-      <li><strong>Capital letters count.</strong> GitHub Pages and Cloudflare treat <code>Kalbi.png</code> and <code>kalbi.png</code> as different files. Your laptop usually doesn't, so a path can work when you test it at home and break once it's live.</li>
+      <li><strong>Same folder:</strong> just the file name. From <code>index.html</code> to the quiz page: <code>quiz.html</code></li>
+      <li><strong>Into a folder:</strong> folder name, a slash, then the file. From <code>index.html</code> to an image: <code>img/quiz.png</code></li>
+      <li><strong>Up a folder:</strong> <code>../</code> means "go up one level." From <code>notes/html-1.html</code> back to the stylesheet: <code>../styles.css</code></li>
+      <li><strong>Capital letters count.</strong> GitHub Pages and Cloudflare treat <code>Quiz.png</code> and <code>quiz.png</code> as different files. Your laptop usually doesn't, so a path can work when you test it at home and break once it's live.</li>
       <li><strong>Use forward slashes</strong> <code>/</code> in web paths, never the Windows backslash <code>\</code>.</li>
-      <li><strong>Don't start with <code>/</code>.</strong> A leading slash jumps to the top of the whole domain, not your project folder. On GitHub Pages your site sits in a subfolder (<code>username.github.io/bmis235-html-4/</code>), so <code>/img/kalbi.png</code> looks in the wrong place.</li>
-      <li><strong>Spell the extension exactly.</strong> <code>kalbi.htm</code> and <code>kalbi.html</code> are two different files, and so are <code>.png</code> and <code>.jpg</code>.</li>
+      <li><strong>Don't start with <code>/</code>.</strong> A leading slash jumps to the top of the whole domain, not your project folder. On GitHub Pages your site sits in a subfolder (<code>username.github.io/bmis235-html-4/</code>), so <code>/img/quiz.png</code> looks in the wrong place.</li>
+      <li><strong>Spell the extension exactly.</strong> <code>quiz.htm</code> and <code>quiz.html</code> are two different files, and so are <code>.png</code> and <code>.jpg</code>.</li>
     </ul>
   </details>
 
 </div>
 
-<footer>Built by Matthew Parker &middot; BMIS 235 &middot; Path Trainer built with Claude (AI)</footer>
+<footer>Built by Matthew Parker &middot; BMIS 235 &middot; Study tools built with Claude (AI)</footer>
 
 <!-- JavaScript: the path checker and both practice modes.
      The checker follows a path one step at a time through the site's real folder layout,
@@ -113,24 +112,23 @@
 <script>
 (function () {
   // ---------- the site's files ----------
-  // recipes/ is a pretend folder that only exists here, so there's something to practice ../ on.
+  // notes/ is a pretend folder that only exists here, so there's something to practice ../ on.
   var FILES = [
-    "index.html", "kalua.html", "katsu.html", "kalbi.html", "paths.html", "styles.css",
-    "img/home.png", "img/kalua.png", "img/katsu.png", "img/kalbi.png", "img/paths.png",
-    "recipes/spam-musubi.html"
+    "index.html", "paths.html", "quiz.html", "cheatsheet.html", "styles.css",
+    "img/home.png", "img/paths.png", "img/quiz.png", "img/cheatsheet.png",
+    "notes/html-1.html"
   ];
-  var FOLDERS = ["img", "recipes"];
+  var FOLDERS = ["img", "notes"];
   var SITE = "bmis235-html-4";
 
   var PAGES = [
     { file: "index.html", name: "Home", img: "img/home.png" },
-    { file: "kalua.html", name: "Kalua Pork", img: "img/kalua.png" },
-    { file: "katsu.html", name: "Chicken Katsu", img: "img/katsu.png" },
-    { file: "kalbi.html", name: "Kalbi", img: "img/kalbi.png" },
-    { file: "paths.html", name: "Path Trainer", img: "img/paths.png" }
+    { file: "paths.html", name: "Path Trainer", img: "img/paths.png" },
+    { file: "quiz.html", name: "Notes Quiz", img: "img/quiz.png" },
+    { file: "cheatsheet.html", name: "Cheat Sheet", img: "img/cheatsheet.png" }
   ];
-  var REAL_PAGES = ["index.html", "kalua.html", "katsu.html", "kalbi.html"];
-  var DEEP_PAGE = "recipes/spam-musubi.html";
+  var REAL_PAGES = ["index.html", "paths.html", "quiz.html", "cheatsheet.html"];
+  var DEEP_PAGE = "notes/html-1.html";
 
   // ---------- small helpers ----------
   function has(list, x) { return list.indexOf(x) !== -1; }
@@ -311,19 +309,17 @@
   var TREE = [
     { path: "", label: SITE + "/", folder: true, depth: 0 },
     { path: "index.html", label: "index.html", depth: 1 },
-    { path: "kalua.html", label: "kalua.html", depth: 1 },
-    { path: "katsu.html", label: "katsu.html", depth: 1 },
-    { path: "kalbi.html", label: "kalbi.html", depth: 1 },
     { path: "paths.html", label: "paths.html", depth: 1 },
+    { path: "quiz.html", label: "quiz.html", depth: 1 },
+    { path: "cheatsheet.html", label: "cheatsheet.html", depth: 1 },
     { path: "styles.css", label: "styles.css", depth: 1 },
     { path: "img", label: "img/", folder: true, depth: 1 },
     { path: "img/home.png", label: "home.png", depth: 2 },
-    { path: "img/kalua.png", label: "kalua.png", depth: 2 },
-    { path: "img/katsu.png", label: "katsu.png", depth: 2 },
-    { path: "img/kalbi.png", label: "kalbi.png", depth: 2 },
     { path: "img/paths.png", label: "paths.png", depth: 2 },
-    { path: "recipes", label: "recipes/", folder: true, depth: 1, note: "pretend folder, for practice" },
-    { path: "recipes/spam-musubi.html", label: "spam-musubi.html", depth: 2 }
+    { path: "img/quiz.png", label: "quiz.png", depth: 2 },
+    { path: "img/cheatsheet.png", label: "cheatsheet.png", depth: 2 },
+    { path: "notes", label: "notes/", folder: true, depth: 1, note: "pretend folder, for practice" },
+    { path: "notes/html-1.html", label: "html-1.html", depth: 2 }
   ];
   var treeNodes = {};
   TREE.forEach(function (n) {
