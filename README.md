@@ -28,7 +28,7 @@ I picked this path because I wanted to see what it's like to build something wit
 
 **How I checked that everything works:**
 - Claude tested the site in a headless Chrome browser. Every page loads, every image shows up, and every menu link works on all four pages.
-- Path Trainer: Claude ran the path checker against about 25 right and wrong answers to make sure it accepts the right ones and explains the wrong ones correctly. It also played the "Fix the broken menu" mode automatically for 100 rounds to confirm each broken menu can be found and fixed.
+- Path Trainer: Claude ran the path checker against about 25 right and wrong answers to make sure it accepts the right ones and explains the wrong ones correctly. It also played the "Fix the broken menu" mode automatically for 60 rounds to confirm each broken menu can be found and fixed.
 - Notes Quiz: Claude generated quizzes from the sample notes and from messy, real-looking class notes, then read every question to check that the right answer is actually right. It also tested uploading a file, rejecting a Word file with a clear message, and keeping the notes after a refresh.
 - FILL IN: what you checked yourself. For example: you clicked every link on the live Cloudflare site, played both Path Trainer modes, made a quiz from your own BMIS 235 notes, and read the Cheat Sheet to make sure it matches what we learned in class.
 
