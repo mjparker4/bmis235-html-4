@@ -3,176 +3,47 @@
   Author: Matthew Parker
   GU username: mparker13
   Course: BMIS 235 - HTML-4
+  Page: Home of the HTML Study Lab
 -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="author" content="Matthew Parker">
-<title>My Top 3 Hawaii Foods</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HTML Study Lab</title>
 
 <!-- this one line connects the page to the stylesheet -->
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<!-- ===== MENU ============================================================
-     The menu is four links. Each link wraps an image instead of words.
-     Build it once on this page, check that every link works,
-     then copy the whole <nav> block and paste it over the menu on the
-     other three pages, so every page has the exact same menu.
-     ===================================================================== -->
+<!-- ===== MENU ===== same menu on every page ===== -->
 <nav>
     <a href="index.html"><img src="img/home.png" alt="Home"></a>
-    <a href="kalua.html"><img src="img/kalua.png" alt="Kalua Pork"></a>
-    <a href="katsu.html"><img src="img/katsu.png" alt="Chicken Katsu"></a>
-    <a href="kalbi.html"><img src="img/kalbi.png" alt="Kalbi"></a>
     <a href="paths.html"><img src="img/paths.png" alt="Path Trainer"></a>
+    <a href="quiz.html"><img src="img/quiz.png" alt="Notes Quiz"></a>
+    <a href="cheatsheet.html"><img src="img/cheatsheet.png" alt="Cheat Sheet"></a>
 </nav>
 
-<h1>My Top 3 Hawaii Foods</h1>
-<p>I grew up in Pearl City on Oahu, and a lot of my favorite memories back home involve food. Whether it was grabbing a plate lunch after practice or eating at a family party, local food was always a big part of life.</p>
-<p>What makes food in Hawaii special is how many cultures it brings together. My top three picks show that mix: kalua pork from Native Hawaiian tradition, chicken katsu from Japan, and kalbi from Korea. Click any button above to learn about each one, where it came from, and where I like to get it.</p>
-<p>Want to plan a trip and try these for yourself? Check out <a href="https://www.gohawaii.com">Go Hawaii</a>, or <a href="mailto:mparker13@zagmail.gonzaga.edu">email me</a> for recommendations.</p>
-<p>Building your own site? Try the <a href="paths.html">Path Trainer</a> to practice writing links and image paths that actually work.</p>
+<h1>HTML Study Lab</h1>
+<p>I learn best by practicing and getting feedback right away, not by rereading notes. So I built this site to study HTML-1 through HTML-3 the way that works for me: try something, see exactly what went wrong, and try again.</p>
 
-<!-- ===== SHOWCASE ======================================================
-     This box is empty on purpose. In Part 7 you paste an interactive
-     graphic BETWEEN the opening <div> and the closing </div> below.
-     ===================================================================== -->
-<div class="showcase"><!-- HTML: three flip cards, one for each food. Click or tap a card to flip it. -->
-<div class="showcase-wrap">
-  <div class="showcase-title">Tap a card for a fun fact!</div>
-  <div class="showcase-grid">
-    <button class="showcase-card" type="button" aria-pressed="false">
-      <span class="showcase-inner">
-        <span class="showcase-face showcase-front">
-          <span class="showcase-emoji">🐖</span>
-          <span class="showcase-name">Kalua Pork</span>
-        </span>
-        <span class="showcase-face showcase-back">
-          "Kalua" means cooking in an imu, an underground oven lined with hot rocks. A whole pig can cook in it for most of the day.
-        </span>
-      </span>
-    </button>
-    <button class="showcase-card" type="button" aria-pressed="false">
-      <span class="showcase-inner">
-        <span class="showcase-face showcase-front">
-          <span class="showcase-emoji">🍗</span>
-          <span class="showcase-name">Chicken Katsu</span>
-        </span>
-        <span class="showcase-face showcase-back">
-          "Katsu" is short for katsuretsu, the Japanese word for cutlet. The original version in Japan was made with pork.
-        </span>
-      </span>
-    </button>
-    <button class="showcase-card" type="button" aria-pressed="false">
-      <span class="showcase-inner">
-        <span class="showcase-face showcase-front">
-          <span class="showcase-emoji">🥩</span>
-          <span class="showcase-name">Kalbi</span>
-        </span>
-        <span class="showcase-face showcase-back">
-          Kalbi (galbi) means "rib" in Korean. Hawaii-style kalbi is cut thin across the bone so it grills fast.
-        </span>
-      </span>
-    </button>
-  </div>
+<div class="home-cards">
+    <a class="home-card" href="paths.html">
+        <span class="home-card-title">Path Trainer</span>
+        <span class="home-card-text">Write the paths for links, images, and stylesheets, then fix a broken menu. It shows step by step how the browser follows your path.</span>
+    </a>
+    <a class="home-card" href="quiz.html">
+        <span class="home-card-title">Notes Quiz</span>
+        <span class="home-card-text">Upload or paste your class notes and it turns them into a multiple-choice quiz, right in your browser.</span>
+    </a>
+    <a class="home-card" href="cheatsheet.html">
+        <span class="home-card-title">Cheat Sheet</span>
+        <span class="home-card-text">The main rules from HTML-1 to HTML-3 on one page, for when you get stuck.</span>
+    </a>
 </div>
 
-<!-- CSS: card layout, brand colors (blue #0077B6, orange #F4A261), Verdana font, and the flip animation. Every rule starts with .showcase. -->
-<style>
-.showcase .showcase-wrap {
-  max-width: 640px;
-  margin: 30px auto;
-  font-family: Verdana, Geneva, sans-serif;
-  text-align: center;
-}
-.showcase .showcase-title {
-  font-size: 18px;
-  font-weight: bold;
-  color: #0077B6;
-  margin-bottom: 14px;
-}
-.showcase .showcase-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-}
-.showcase .showcase-card {
-  height: 220px;
-  padding: 0;
-  border: none;
-  background: none;
-  cursor: pointer;
-  perspective: 800px;
-  font-family: inherit;
-}
-.showcase .showcase-inner {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: 100%;
-  transition: transform 0.6s;
-  transform-style: preserve-3d;
-}
-.showcase .showcase-card.is-flipped .showcase-inner {
-  transform: rotateY(180deg);
-}
-.showcase .showcase-face {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
-  border: 3px solid #F4A261;
-  border-radius: 12px;
-  box-sizing: border-box;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-.showcase .showcase-front {
-  background-color: #0077B6;
-  color: #ffffff;
-}
-.showcase .showcase-back {
-  background-color: #F4A261;
-  color: #2b2b2b;
-  border-color: #0077B6;
-  transform: rotateY(180deg);
-  font-size: clamp(11px, 2.8vw, 15px);
-  line-height: 1.4;
-}
-.showcase .showcase-emoji {
-  font-size: clamp(32px, 8vw, 48px);
-  margin-bottom: 8px;
-}
-.showcase .showcase-name {
-  font-size: clamp(13px, 3.2vw, 18px);
-  font-weight: bold;
-}
-.showcase .showcase-card:focus-visible {
-  outline: 3px solid #F4A261;
-  outline-offset: 4px;
-  border-radius: 12px;
-}
-</style>
-
-<!-- JavaScript: flips a card when it's clicked or tapped, and flips it back on a second click. -->
-<script>
-(function () {
-  var cards = document.querySelectorAll(".showcase .showcase-card");
-  cards.forEach(function (card) {
-    card.addEventListener("click", function () {
-      var flipped = card.classList.toggle("is-flipped");
-      card.setAttribute("aria-pressed", flipped ? "true" : "false");
-    });
-  });
-})();
-</script></div>
-
-<footer>Built by Matthew Parker &middot; BMIS 235</footer>
+<footer>Built by Matthew Parker &middot; BMIS 235 &middot; Study tools built with Claude (AI)</footer>
 
 </body>
 </html>
