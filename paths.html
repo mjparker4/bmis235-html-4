@@ -30,6 +30,7 @@
 <p>Every link, image, and stylesheet on this site depends on one thing: a path that tells the browser where to find a file. Get one character wrong and you get a broken image or a "404 Not Found." This page is for practicing paths by doing them, using the real folder layout of this site.</p>
 
 <div class="pt">
+<div class="pt-layout">
 
   <!-- the site's folders, drawn as a tree. JavaScript highlights where a path goes. -->
   <div class="pt-panel pt-treebox">
@@ -38,6 +39,7 @@
     <div class="pt-legend"><span class="pt-here-dot"></span> you are here &nbsp; <span class="pt-ok-dot"></span> path found it &nbsp; <span class="pt-bad-dot"></span> path went wrong</div>
   </div>
 
+  <div class="pt-main">
   <div class="pt-modes" role="tablist">
     <button type="button" class="pt-mode is-on" data-mode="write" role="tab" aria-selected="true">Write the path</button>
     <button type="button" class="pt-mode" data-mode="debug" role="tab" aria-selected="false">Fix the broken menu</button>
@@ -84,6 +86,8 @@
       <button type="button" class="pt-btn pt-btn-light" id="pt-dnext">New broken menu</button>
     </div>
   </section>
+  </div>
+</div>
 
   <details class="pt-panel pt-rules">
     <summary>The rules, all in one place</summary>
@@ -225,7 +229,7 @@
         if (fMatch) {
           r.msg = "Check the capital letters. The folder is named " + baseName(fMatch) + "/, not " + seg + "/. Live web servers treat those as different names.";
         } else if (has(FOLDERS, seg) && cur.length) {
-          r.msg = "There is a " + seg + "/ folder, but it's one level up, not inside " + folderName(cur) + ". You need ../ first.";
+          r.msg = "There is a folder named " + seg + "/, but it's one level up, not inside " + folderName(cur) + ". You need ../ first.";
         } else if (has(FILES, want) || FILES.some(function (f) { return baseName(f) === seg; })) {
           r.msg = "\"" + seg + "\" is a file, not a folder, so you can't go inside it. Only folder names come before a /.";
         } else {
@@ -262,6 +266,17 @@
       }
       if (/\s/.test(seg)) { r.msg = "There's a space in the path. None of the file names on this site have spaces in them."; return r; }
 
+      var elsewhere = FILES.filter(function (f) { return baseName(f).toLowerCase() === seg.toLowerCase(); })[0];
+      if (elsewhere) {
+        var where = dirParts(elsewhere);
+        var myDepth = cur.length, itsDepth = where.length;
+        var tip = itsDepth > myDepth ? " You need to go into that folder first." :
+                  itsDepth < myDepth ? " You need ../ to go up a level first." : "";
+        var caps = baseName(elsewhere) !== seg ? " Also check the capital letters: the file is named " + baseName(elsewhere) + "." : "";
+        r.msg = "There is a " + baseName(elsewhere) + ", but it lives in " + folderName(where) + ", and your path looked for it in " + folderName(cur) + "." + tip + caps;
+        return r;
+      }
+
       var stem = seg.replace(/\.[^.]*$/, "");
       if (stem === seg) {
         var withExt = FILES.filter(function (f) { return f.replace(/\.[^.]*$/, "") === resolved; })[0];
@@ -277,16 +292,6 @@
           r.msg = "Check the file extension. The file ends in " + sameStem.slice(sameStem.lastIndexOf(".")) + ", not " + seg.slice(seg.lastIndexOf(".")) + ". Those are two different files.";
           return r;
         }
-      }
-
-      var elsewhere = FILES.filter(function (f) { return baseName(f) === seg; })[0];
-      if (elsewhere) {
-        var where = dirParts(elsewhere);
-        var myDepth = cur.length, itsDepth = where.length;
-        var tip = itsDepth > myDepth ? " You need to go into that folder first." :
-                  itsDepth < myDepth ? " You need ../ to go up a level first." : "";
-        r.msg = "There is a " + seg + ", but it lives in " + folderName(where) + ", and your path looked for it in " + folderName(cur) + "." + tip;
-        return r;
       }
 
       var neighbors = FILES.filter(function (f) { return dirParts(f).join("/") === cur.join("/") && distance(baseName(f).toLowerCase(), seg.toLowerCase()) <= 2; });
@@ -336,6 +341,10 @@
     if (treeNodes[here]) treeNodes[here].classList.add("is-here");
     if (!result) return;
     result.visited.forEach(function (p) { if (treeNodes[p]) treeNodes[p].classList.add("is-walk"); });
+    if (!result.ok && !result.resolved && result.visited.length) {
+      var lastSeen = result.visited[result.visited.length - 1];
+      if (treeNodes[lastSeen]) treeNodes[lastSeen].classList.add("is-bad");
+    }
     if (result.resolved) {
       if (result.found && treeNodes[result.resolved]) treeNodes[result.resolved].classList.add("is-found");
       else {
@@ -576,6 +585,7 @@
     var r = follow(dq.from, bad, target);
     paintTree(dq.from, r);
     showResult(dfb, r, "Now fix it: type the correct " + dq.broken.attr + " below.");
+    dfb.insertBefore(el("p", "pt-verdict pt-found", "\u2714 You found the broken line. Here's why it fails:"), dfb.firstChild);
 
     fixBox.hidden = false;
     fixLine.innerHTML = "";

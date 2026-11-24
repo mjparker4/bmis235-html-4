@@ -61,8 +61,25 @@ footer {
    ===================================================================== */
 
 .pt {
-    max-width: 760px;
+    max-width: 1040px;
     margin: 0 auto;
+}
+
+/* folder tree on the left, practice on the right; stacks on small screens */
+.pt-layout {
+    display: grid;
+    grid-template-columns: 290px 1fr;
+    gap: 20px;
+    align-items: start;
+}
+.pt-treebox {
+    position: sticky;
+    top: 12px;
+}
+.pt-main { min-width: 0; }
+@media (max-width: 860px) {
+    .pt-layout { grid-template-columns: 1fr; }
+    .pt-treebox { position: static; }
 }
 
 .pt code,
@@ -120,7 +137,7 @@ footer {
 .pt-bad-dot { background-color: #d1495b; }
 
 /* mode tabs and level buttons */
-.pt-modes { display: flex; gap: 8px; }
+.pt-modes { display: flex; gap: 8px; margin-top: 18px; }
 .pt-mode, .pt-level, .pt-btn {
     font-family: Verdana, Geneva, sans-serif;
     border: 2px solid #0077B6;
@@ -191,6 +208,7 @@ footer {
 .pt-feedback.is-bad { background-color: #fde2e1; }
 .pt-feedback.is-hint { background-color: #fff3e6; }
 .pt-verdict { font-weight: bold; }
+.pt-found { color: #1b6b32; }
 .pt-trace { margin: 4px 0 0 0; padding-left: 22px; font-size: 14px; line-height: 1.6; }
 .pt-trace li.is-good::marker { color: #2d9a4b; }
 .pt-trace li.is-bad { color: #a4161a; font-weight: bold; }
