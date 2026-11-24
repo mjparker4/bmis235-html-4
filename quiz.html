@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<!--
+  Author: Matthew Parker
+  GU username: mparker13
+  Course: BMIS 235 - HTML-4
+  Page: Notes Quiz, turns uploaded or pasted notes into a quiz (no AI, runs in the browser)
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="author" content="Matthew Parker">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notes Quiz</title>
+
+<!-- this one line connects the page to the stylesheet -->
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ===== MENU ===== same menu on every page ===== -->
+<nav>
+    <a href="index.html"><img src="img/home.png" alt="Home"></a>
+    <a href="paths.html"><img src="img/paths.png" alt="Path Trainer"></a>
+    <a href="quiz.html"><img src="img/quiz.png" alt="Notes Quiz"></a>
+    <a href="cheatsheet.html"><img src="img/cheatsheet.png" alt="Cheat Sheet"></a>
+</nav>
+
+<h1>Notes Quiz</h1>
+<p>Upload or paste your class notes and this page turns them into a quiz. Everything happens in your browser: your notes aren't sent anywhere, and no AI writes the questions. It builds them from the definitions and sentences in your notes.</p>
+
+<div class="nq">
+
+  <!-- ===== STEP 1: NOTES ===== -->
+  <section class="nq-panel" id="nq-setup">
+    <h2>1 &middot; Add your notes</h2>
+    <div class="nq-upload">
+      <label class="nq-btn" for="nq-file">Upload notes</label>
+      <input type="file" id="nq-file" accept=".txt,.md,.html,.htm,.css,.csv,text/plain,text/markdown,text/html" multiple>
+      <button type="button" class="nq-btn nq-btn-light" id="nq-sample">Use sample notes (HTML-1 to 3)</button>
+      <button type="button" class="nq-btn nq-btn-light" id="nq-clear">Clear</button>
+    </div>
+    <p class="nq-small">Upload .txt, .md, or .html files, or drag them onto the box. For Word, Google Docs, or PDF notes, copy the text and paste it in.</p>
+    <textarea id="nq-notes" rows="12" spellcheck="false" placeholder="Paste your notes here, or upload a file.
+
+Notes like these make the best questions:
+Selector: the part of a CSS rule that picks which elements to style
+The <head> holds information about the page, like the <title>.
+alt text shows up when an image can't load."></textarea>
+    <div class="nq-file-msg" id="nq-file-msg" aria-live="polite"></div>
+
+    <h2>2 &middot; Make the quiz</h2>
+    <div class="nq-row">
+      <label for="nq-count">Questions:</label>
+      <select id="nq-count">
+        <option value="5">5</option>
+        <option value="10" selected>10</option>
+        <option value="15">15</option>
+        <option value="999">As many as possible</option>
+      </select>
+      <button type="button" class="nq-btn" id="nq-make">Make my quiz</button>
+    </div>
+    <div class="nq-report" id="nq-report" aria-live="polite"></div>
+
+    <details class="nq-tips">
+      <summary>How to write notes that make good questions</summary>
+      <ul>
+        <li><strong>Definitions on their own line</strong> work best: <code>Term: what it means</code> or <code>Term - what it means</code>. Each one becomes a "which term is this?" or "which describes this term?" question.</li>
+        <li>Sentences like <code>The cascade is ...</code> or <code>../ means ...</code> count as definitions too.</li>
+        <li><strong>Full sentences</strong> become fill-in-the-blank questions. Put code in the sentence (like <code>&lt;title&gt;</code> or <code>styles.css</code>) and that's usually what gets blanked out.</li>
+        <li>Headings (<code># HTML-2</code>) and bullet points are fine. Very short fragments get skipped.</li>
+        <li>You need at least 4 definitions or a handful of full sentences for multiple choice to work well.</li>
+      </ul>
+    </details>
+  </section>
+
+  <!-- ===== STEP 3: THE QUIZ ===== -->
+  <section class="nq-panel" id="nq-quiz" hidden>
+    <div class="nq-top">
+      <span id="nq-progress"></span>
+      <span id="nq-score"></span>
+    </div>
+    <div class="nq-bar"><div class="nq-bar-fill" id="nq-bar"></div></div>
+    <div class="nq-kind" id="nq-kind"></div>
+    <div class="nq-question" id="nq-question"></div>
+    <div class="nq-options" id="nq-options"></div>
+    <div class="nq-feedback" id="nq-feedback" aria-live="polite"></div>
+    <div class="nq-row">
+      <button type="button" class="nq-btn" id="nq-next" hidden>Next question</button>
+      <button type="button" class="nq-btn nq-btn-light" id="nq-quit">Back to my notes</button>
+    </div>
+  </section>
+
+  <!-- ===== RESULTS ===== -->
+  <section class="nq-panel" id="nq-results" hidden>
+    <h2 id="nq-final"></h2>
+    <div id="nq-missed"></div>
+    <div class="nq-row">
+      <button type="button" class="nq-btn" id="nq-retry">Retry the ones I missed</button>
+      <button type="button" class="nq-btn nq-btn-light" id="nq-again">New quiz from the same notes</button>
+      <button type="button" class="nq-btn nq-btn-light" id="nq-edit">Edit my notes</button>
+    </div>
+  </section>
+
+</div>
+
+<footer>Built by Matthew Parker &middot; BMIS 235 &middot; Study tools built with Claude (AI)</footer>
+
+<!-- JavaScript: reads the notes, finds definitions and sentences, builds the questions, and runs the quiz.
+     Nothing is sent to a server. Notes are saved in this browser only, so they're still here next visit. -->
+<script>
+(function () {
+  var SAMPLE = [
+    "# HTML-1: Tags and page structure",
+    "Tag: a label in angle brackets, like <p>, that tells the browser what a piece of content is",
+    "Element: an opening tag, its content, and its closing tag together",
+    "Attribute: extra information inside an opening tag, like href=\"quiz.html\"",
+    "Comment: a note in the code between <!-- and --> that the browser doesn't show",
+    "<!DOCTYPE html> goes on the very first line of every page.",
+    "The <head> holds information about the page that visitors don't see on the page itself.",
+    "The <body> holds everything visitors see, like headings, paragraphs, and images.",
+    "The text inside <title> shows up in the browser tab.",
+    "<h1> is the main heading of the page.",
+    "<p> marks a paragraph.",
+    "",
+    "# HTML-2: Links, images, and paths",
+    "<a> makes a link, and its href attribute says where the link goes.",
+    "<img> shows an image, and its src attribute says where the image file is.",
+    "The alt attribute describes an image for screen readers and shows up if the image can't load.",
+    "Relative path: a path that starts from the folder of the page you're editing",
+    "Absolute URL: a full web address that starts with https://",
+    "To reach a file inside a folder, write the folder name, a slash, and then the file name, like img/home.png.",
+    "../ means go up one folder.",
+    "Live web servers treat capital letters in file names as different, so Home.png and home.png are two different files.",
+    "",
+    "# HTML-3: CSS",
+    "CSS: the language that controls how a page looks, like colors, fonts, and spacing",
+    "Stylesheet: a separate .css file that holds the CSS for the whole site",
+    "The <link> tag goes in the <head> and connects a page to the stylesheet.",
+    "One stylesheet can style every page that links to it, so changing one rule changes the whole site.",
+    "Selector: the part of a CSS rule that picks which elements to style",
+    "Property: the thing a CSS rule changes, like color or font-size",
+    "Cascade: the set of rules that decides which CSS rule wins when two rules style the same thing",
+    "When two rules are equally specific, the one that comes later in the CSS wins.",
+    "A class selector starts with a period and is more specific than a tag selector.",
+    "Hex color: a color written as # plus six digits or letters, like #0077B6"
+  ].join("\n");
+
+  var STOP = ("a an the and or but if so of to in on at by for from with as is are was were be been being it its this that these those " +
+    "you your we our they their he she his her i me my can could will would should may might do does did not no yes than then there here " +
+    "what which who when where why how all any each every some such only also just like into over under about up out more most very much many " +
+    "have has had one two get got make makes made use uses used way thing things page pages").split(" ");
+  var NO_TERM_START = ["when", "if", "because", "since", "while", "to", "in", "on", "for", "after", "before", "so", "and", "but", "or",
+    "with", "as", "at", "by", "from", "it", "this", "that", "these", "those", "they", "there", "he", "she", "we", "you", "i", "one", "each", "every", "some"];
+
+  // ---------- helpers ----------
+  function $(id) { return document.getElementById(id); }
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; }
+  function shuffle(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function norm(s) { return s.toLowerCase().replace(/[`"'“”‘’]/g, "").replace(/[.,;:!?]+$/, "").replace(/\s+/g, " ").trim(); }
+  function trimDef(s) { s = s.trim().replace(/\s+/g, " "); return s.length > 150 ? s.slice(0, 147).replace(/\s\S*$/, "") + "…" : s; }
+  function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+  function store(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+
+  // ---------- reading the notes ----------
+  function cleanLine(line) {
+    return line
+      .replace(/^\s*(#{1,6}\s+|[-*•●◦–>]+\s+|\d+[.)]\s+|[a-z][.)]\s+)/i, "")
+      .replace(/\*\*|__/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function parseNotes(text) {
+    var defs = [], sentences = [];
+    text.split(/\r?\n/).forEach(function (raw) {
+      var isHeading = /^\s*#{1,6}\s/.test(raw);
+      var line = cleanLine(raw);
+      if (!line || isHeading) return;
+
+      // "Term: definition", "Term - definition", "Term = definition"
+      var m = line.match(/^([^:=]{1,50}?)\s*(?::|\s[-–—]\s|\s=\s)\s*(.{8,})$/);
+      if (m && goodTerm(m[1]) && !/^\/\//.test(m[2])) { defs.push({ term: tidyTerm(m[1]), def: m[2].trim(), source: line }); return; }
+
+      // "Term is/are/means/refers to definition"
+      m = line.match(/^(.{1,45}?)\s+(is|are|means|refers to|stands for)\s+(.{8,})$/i);
+      if (m && goodTerm(m[1]) && m[1].split(/\s+/).length <= 4) {
+        defs.push({ term: tidyTerm(m[1]), def: m[3].replace(/[.]$/, "").trim(), verb: m[2].toLowerCase(), source: line });
+        return;
+      }
+
+      // otherwise split into sentences for fill-in-the-blank
+      line.replace(/([.!?])\s+(?=[A-Z<"`(])/g, "$1\n").split("\n").forEach(function (s) {
+        var words = s.split(/\s+/).length;
+        if (words >= 5 && words <= 45) sentences.push(s.trim());
+      });
+    });
+    return { defs: dedupe(defs), sentences: sentences };
+  }
+
+  function goodTerm(t) {
+    t = t.trim();
+    if (!t || t.length > 50) return false;
+    var first = t.split(/\s+/)[0].toLowerCase().replace(/[^a-z]/g, "");
+    if (NO_TERM_START.indexOf(first) !== -1) return false;
+    if (/[.!?]$/.test(t)) return false;
+    if (t.split(/\s+/).length > 6) return false;
+    if (/^https?$/i.test(t)) return false;
+    return true;
+  }
+  function tidyTerm(t) { return t.trim().replace(/^(the|a|an)\s+/i, "").replace(/^["'`]|["'`]$/g, ""); }
+  function dedupe(defs) {
+    var seen = {};
+    return defs.filter(function (d) { var k = norm(d.term); if (seen[k]) return false; seen[k] = true; return true; });
+  }
+
+  // key words in a sentence that could be blanked out, most useful first
+  var CODE_RES = [
+    /<!--|-->|<!DOCTYPE html>|<\/?[a-z][a-z0-9]*(?:\s[^<>]*)?>/gi,             // tags
+    /`[^`]+`/g,                                                             // code in backticks
+    /(?:\.\.\/|[\w-]+\/)*[\w-]+\.(?:html?|css|png|jpe?g|gif|svg|js|txt)\b/gi,  // file names and paths
+    /\.\.\//g,                                                              // ../
+    /#[0-9a-f]{6}\b|#[0-9a-f]{3}\b/gi,                                      // hex colors
+    /\b[a-z-]+(?==")/gi,                                                    // attribute names
+    /\.[a-z][\w-]*\b(?=\s*\{)/gi                                            // class selectors
+  ];
+  function kindOf(tok) {
+    if (/^<\/?[a-z!]/i.test(tok) || tok === "-->") return "tag";
+    if (/\.(html?|css|png|jpe?g|gif|svg|js|txt)$/i.test(tok) || tok === "../") return "file";
+    if (/^#[0-9a-f]+$/i.test(tok)) return "color";
+    if (/^\d/.test(tok)) return "number";
+    if (/^`/.test(tok)) return "code";
+    return "word";
+  }
+  function codeTokens(s) {
+    var found = [];
+    CODE_RES.forEach(function (re) { (s.match(re) || []).forEach(function (t) { if (t.length > 1 && t !== "<!--" && t !== "-->") found.push(t); }); });
+    (s.match(/\b\d+(?:\.\d+)?%?(?:px)?\b/g) || []).forEach(function (t) { found.push(t); });
+    return found;
+  }
+  function plainWords(s) {
+    var words = (s.match(/[A-Za-z][A-Za-z-]{3,}/g) || []).filter(function (w) { return STOP.indexOf(w.toLowerCase()) === -1; });
+    words.sort(function (a, b) { return b.length - a.length; });
+    return words;
+  }
+  // terms from the notes' own definitions that show up in a sentence
+  function termHits(s, terms) {
+    return terms.filter(function (t) {
+      if (t.length < 3) return false;
+      var re = new RegExp("(^|[^A-Za-z])" + t.replace(/[.*+?^${}()|[\]\\\/]/g, "\\$&") + "s?(?![A-Za-z])", "i");
+      return re.test(s);
+    }).map(function (t) {
+      var m = s.match(new RegExp(t.replace(/[.*+?^${}()|[\]\\\/]/g, "\\$&"), "i"));
+      return m ? m[0] : t;
+    });
+  }
+  function keyTokens(s, terms) {
+    var code = codeTokens(s);
+    if (code.length) return code;
+    var hits = termHits(s, terms || []);
+    if (hits.length) return hits;
+    return plainWords(s).slice(0, 3);
+  }
+  // wrong answers for a plain word: other words that look like it (same ending, similar length)
+  function ending(w) { w = w.toLowerCase(); var e = ["tion", "ing", "ly", "ed", "es", "s"]; for (var i = 0; i < e.length; i++) if (w.slice(-e[i].length) === e[i]) return e[i]; return ""; }
+  function wordDistractors(ans, pool, sentence) {
+    var lowerS = sentence.toLowerCase();
+    var scored = shuffle(pool).filter(function (w) { return norm(w) !== norm(ans) && lowerS.indexOf(w.toLowerCase()) === -1; }).map(function (w) {
+      var sc = 0;
+      if (ending(w) === ending(ans)) sc += 2;
+      if (Math.abs(w.length - ans.length) <= 2) sc += 1;
+      return { w: w, sc: sc };
+    });
+    scored.sort(function (a, b) { return b.sc - a.sc; });
+    return scored.slice(0, 3).map(function (x) { return x.w; });
+  }
+  function matchCase(word, like) { if (word === word.toUpperCase()) return word; return like.charAt(0) === like.charAt(0).toLowerCase() ? word.toLowerCase() : cap(word); }
+
+  // ---------- building questions ----------
+  function buildQuestions(notes) {
+    var qs = [];
+    var defs = notes.defs;
+
+    // a pool of every key token in the notes, grouped by kind, for wrong answers
+    var terms = defs.map(function (d) { return d.term; }).filter(function (t) { return !/[<>\/.]/.test(t); });
+    var pool = { tag: [], file: [], color: [], number: [], code: [], word: [] };
+    function addPool(t) { var k = kindOf(t); if (!pool[k].some(function (x) { return norm(x) === norm(t); })) pool[k].push(t); }
+    notes.sentences.forEach(function (s) { codeTokens(s).forEach(addPool); plainWords(s).forEach(addPool); });
+    defs.forEach(function (d) { codeTokens(d.def).forEach(addPool); });
+
+    // definitions: two kinds of question
+    defs.forEach(function (d, i) {
+      var others = defs.filter(function (x, j) { return j !== i; });
+      if (others.length >= 1 && Math.random() < 0.5) {
+        qs.push({
+          kind: "Which term is it?",
+          prompt: "Which term matches this description from your notes?",
+          quote: cap(trimDef(d.def)),
+          answer: d.term,
+          options: [d.term].concat(shuffle(others).slice(0, 3).map(function (x) { return x.term; })),
+          source: d.source
+        });
+      } else if (others.length >= 1) {
+        qs.push({
+          kind: "What does it mean?",
+          prompt: "Which one describes “" + d.term + "”?",
+          answer: cap(trimDef(d.def)),
+          options: [cap(trimDef(d.def))].concat(shuffle(others).slice(0, 3).map(function (x) { return cap(trimDef(x.def)); })),
+          source: d.source
+        });
+      } else {
+        qs.push({ kind: "Type the term", prompt: "What term is this describing?", quote: cap(trimDef(d.def)), answer: d.term, typed: true, source: d.source });
+      }
+    });
+
+    // sentences: fill in the blank
+    var usedAnswers = {};
+    notes.sentences.forEach(function (s) {
+      var toks = keyTokens(s, terms).filter(function (t) { return (usedAnswers[norm(t)] || 0) < 2; });
+      if (!toks.length) return;
+      var ans = toks[Math.floor(Math.random() * Math.min(toks.length, 2))];
+      var at = s.indexOf(ans);
+      if (at === -1) return;
+      var blanked = s.slice(0, at) + "_____" + s.slice(at + ans.length);
+      var shown = ans.replace(/^`|`$/g, "");
+      var kind = kindOf(ans);
+      var lowerS = s.toLowerCase();
+      var wrong;
+      var isTerm = terms.some(function (t) { return norm(t) === norm(ans) || norm(t + "s") === norm(ans); });
+      if (kind === "word" && isTerm && terms.length >= 3) {
+        wrong = shuffle(terms).filter(function (t) { return norm(t) !== norm(ans) && norm(t + "s") !== norm(ans) && lowerS.indexOf(t.toLowerCase()) === -1; })
+          .slice(0, 3).map(function (t) { return matchCase(t, ans); });
+      } else if (kind === "word") {
+        wrong = wordDistractors(ans, pool.word, s);
+      } else {
+        wrong = shuffle(pool[kind]).filter(function (x) {
+          return norm(x) !== norm(ans) && lowerS.indexOf(x.toLowerCase()) === -1;
+        }).slice(0, 3).map(function (x) { return x.replace(/^`|`$/g, ""); });
+      }
+      usedAnswers[norm(ans)] = (usedAnswers[norm(ans)] || 0) + 1;
+      if (wrong.length >= 2) {
+        qs.push({ kind: "Fill in the blank", prompt: "Fill in the blank:", quote: blanked, answer: shown, options: [shown].concat(wrong), source: s });
+      } else {
+        qs.push({ kind: "Fill in the blank", prompt: "Type the missing word or code:", quote: blanked, answer: shown, typed: true, source: s });
+      }
+    });
+
+    qs.forEach(function (q) { if (q.options) q.options = shuffle(dedupeOptions(q.options)); });
+    return qs.filter(function (q) { return q.typed || q.options.length >= 2; });
+  }
+  function dedupeOptions(opts) {
+    var seen = {};
+    return opts.filter(function (o) { var k = norm(o); if (seen[k]) return false; seen[k] = true; return true; });
+  }
+
+  // ---------- running the quiz ----------
+  var all = [], quiz = [], at = 0, right = 0, missed = [], answered = false, lastNotes = "";
+
+  function show(id) { ["nq-setup", "nq-quiz", "nq-results"].forEach(function (x) { $(x).hidden = x !== id; }); }
+
+  function start(questions) {
+    quiz = questions; at = 0; right = 0; missed = [];
+    show("nq-quiz");
+    render();
+    $("nq-quiz").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function render() {
+    var q = quiz[at];
+    answered = false;
+    $("nq-progress").textContent = "Question " + (at + 1) + " of " + quiz.length;
+    $("nq-score").textContent = "Score: " + right;
+    $("nq-bar").style.width = (at / quiz.length * 100) + "%";
+    $("nq-kind").textContent = q.kind;
+    var box = $("nq-question");
+    box.innerHTML = "";
+    box.appendChild(el("p", "nq-prompt", q.prompt));
+    if (q.quote) box.appendChild(el("p", "nq-quote", q.quote));
+    var opts = $("nq-options");
+    opts.innerHTML = "";
+    if (q.typed) {
+      var input = el("input", "nq-input");
+      input.type = "text"; input.setAttribute("aria-label", "Your answer"); input.setAttribute("autocomplete", "off"); input.setAttribute("spellcheck", "false");
+      var go = el("button", "nq-btn", "Check");
+      go.type = "button";
+      go.addEventListener("click", function () { answerTyped(input.value); });
+      input.addEventListener("keydown", function (e) { if (e.key === "Enter") { if (answered) next(); else answerTyped(input.value); } });
+      opts.appendChild(input); opts.appendChild(go);
+      input.focus({ preventScroll: true });
+    } else {
+      q.options.forEach(function (o, i) {
+        var b = el("button", "nq-option");
+        b.type = "button";
+        b.appendChild(el("span", "nq-letter", String.fromCharCode(65 + i)));
+        b.appendChild(el("span", "", o));
+        b.addEventListener("click", function () { answerChoice(o, b); });
+        opts.appendChild(b);
+      });
+    }
+    $("nq-feedback").innerHTML = ""; $("nq-feedback").className = "nq-feedback";
+    $("nq-next").hidden = true;
+  }
+
+  function finishAnswer(ok, q) {
+    answered = true;
+    if (ok) right++; else missed.push(q);
+    $("nq-score").textContent = "Score: " + right;
+    var fb = $("nq-feedback");
+    fb.className = "nq-feedback " + (ok ? "is-good" : "is-bad");
+    fb.innerHTML = "";
+    fb.appendChild(el("p", "nq-verdict", ok ? "✔ Right!" : "✖ Not quite. The answer is: " + q.answer));
+    var src = el("p", "nq-source");
+    src.appendChild(el("span", "nq-source-label", "From your notes: "));
+    src.appendChild(document.createTextNode(q.source));
+    fb.appendChild(src);
+    $("nq-next").hidden = false;
+    $("nq-next").textContent = at === quiz.length - 1 ? "See my score" : "Next question";
+    $("nq-next").focus({ preventScroll: true });
+  }
+
+  function answerChoice(choice, btn) {
+    if (answered) return;
+    var q = quiz[at];
+    var ok = norm(choice) === norm(q.answer);
+    Array.prototype.forEach.call(document.querySelectorAll(".nq-option"), function (b) {
+      b.disabled = true;
+      if (norm(b.textContent.slice(1)) === norm(q.answer)) b.classList.add("is-right");
+    });
+    if (!ok) btn.classList.add("is-wrong");
+    finishAnswer(ok, q);
+  }
+
+  function answerTyped(value) {
+    if (answered || !value.trim()) return;
+    var q = quiz[at];
+    var a = norm(value), b = norm(q.answer);
+    var ok = a === b || a.replace(/[<>\/]/g, "") === b.replace(/[<>\/]/g, "") && a.replace(/[<>\/]/g, "").length > 0;
+    finishAnswer(ok, q);
+  }
+
+  function next() {
+    if (at < quiz.length - 1) { at++; render(); }
+    else results();
+  }
+
+  function results() {
+    show("nq-results");
+    $("nq-bar").style.width = "100%";
+    var pct = Math.round(right / quiz.length * 100);
+    $("nq-final").textContent = "You got " + right + " of " + quiz.length + " (" + pct + "%)";
+    var box = $("nq-missed");
+    box.innerHTML = "";
+    if (!missed.length) { box.appendChild(el("p", "", "Perfect score. Try a new quiz from the same notes. The questions get mixed up each time.")); $("nq-retry").hidden = true; return; }
+    $("nq-retry").hidden = false;
+    box.appendChild(el("p", "nq-small", "Go over these from your notes:"));
+    var ul = el("ul", "nq-missed-list");
+    missed.forEach(function (q) {
+      var li = el("li");
+      li.appendChild(el("strong", "", q.answer));
+      li.appendChild(document.createTextNode(" — " + q.source));
+      ul.appendChild(li);
+    });
+    box.appendChild(ul);
+  }
+
+  function makeQuiz() {
+    var text = $("nq-notes").value;
+    var report = $("nq-report");
+    report.className = "nq-report";
+    if (!text.trim()) { report.textContent = "Add some notes first: paste them in, upload a file, or try the sample notes."; report.classList.add("is-bad"); return; }
+    store("nq-notes", text);
+    lastNotes = text;
+    var notes = parseNotes(text);
+    all = buildQuestions(notes);
+    if (!all.length) {
+      report.textContent = "I couldn't find anything to make questions from. Try writing definitions like “Term: what it means” or full sentences (see the tips below).";
+      report.classList.add("is-bad");
+      return;
+    }
+    var n = Math.min(parseInt($("nq-count").value, 10), all.length);
+    report.textContent = "Found " + notes.defs.length + " definition" + (notes.defs.length === 1 ? "" : "s") + " and " + notes.sentences.length +
+      " sentence" + (notes.sentences.length === 1 ? "" : "s") + ", and made " + all.length + " possible questions. Here are " + n + ".";
+    start(shuffle(all).slice(0, n));
+  }
+
+  // ---------- uploading ----------
+  function readFiles(files) {
+    var msg = $("nq-file-msg");
+    msg.className = "nq-file-msg";
+    var list = Array.prototype.slice.call(files);
+    if (!list.length) return;
+    var texts = [], skipped = [], left = list.length;
+    list.forEach(function (f) {
+      var ok = /\.(txt|md|markdown|html?|css|csv)$/i.test(f.name) || /^text\//.test(f.type);
+      if (!ok) { skipped.push(f.name); if (--left === 0) done(); return; }
+      var r = new FileReader();
+      r.onload = function () {
+        var t = String(r.result);
+        if (/\.html?$/i.test(f.name)) {
+          var doc = new DOMParser().parseFromString(t, "text/html");
+          Array.prototype.forEach.call(doc.querySelectorAll("script, style, nav"), function (x) { x.remove(); });
+          Array.prototype.forEach.call(doc.querySelectorAll("p, li, h1, h2, h3, h4, div, br, tr, pre"), function (x) { x.appendChild(doc.createTextNode("\n")); });
+          t = doc.body ? doc.body.textContent : t;
+        }
+        texts.push(t.replace(/\n{3,}/g, "\n\n").trim());
+        if (--left === 0) done();
+      };
+      r.onerror = function () { skipped.push(f.name); if (--left === 0) done(); };
+      r.readAsText(f);
+    });
+    function done() {
+      if (texts.length) {
+        var box = $("nq-notes");
+        box.value = (box.value.trim() ? box.value.trim() + "\n\n" : "") + texts.join("\n\n");
+        store("nq-notes", box.value);
+      }
+      var parts = [];
+      if (texts.length) parts.push("Added " + texts.length + " file" + (texts.length === 1 ? "" : "s") + ".");
+      if (skipped.length) parts.push("Couldn't read " + skipped.join(", ") + ". For Word, Google Docs, or PDF, copy the text and paste it in.");
+      msg.textContent = parts.join(" ");
+      if (skipped.length) msg.classList.add("is-bad");
+    }
+  }
+
+  $("nq-file").addEventListener("change", function () { readFiles(this.files); this.value = ""; });
+  var ta = $("nq-notes");
+  ta.addEventListener("dragover", function (e) { e.preventDefault(); ta.classList.add("is-drop"); });
+  ta.addEventListener("dragleave", function () { ta.classList.remove("is-drop"); });
+  ta.addEventListener("drop", function (e) { if (e.dataTransfer && e.dataTransfer.files.length) { e.preventDefault(); ta.classList.remove("is-drop"); readFiles(e.dataTransfer.files); } });
+  ta.addEventListener("input", function () { store("nq-notes", ta.value); });
+
+  $("nq-sample").addEventListener("click", function () { ta.value = SAMPLE; store("nq-notes", SAMPLE); $("nq-file-msg").textContent = "Loaded the sample notes. Edit them or add your own."; });
+  $("nq-clear").addEventListener("click", function () { ta.value = ""; store("nq-notes", ""); $("nq-report").textContent = ""; $("nq-file-msg").textContent = ""; ta.focus(); });
+  $("nq-make").addEventListener("click", makeQuiz);
+  $("nq-next").addEventListener("click", next);
+  $("nq-quit").addEventListener("click", function () { show("nq-setup"); });
+  $("nq-edit").addEventListener("click", function () { show("nq-setup"); ta.focus(); });
+  $("nq-again").addEventListener("click", function () {
+    all = buildQuestions(parseNotes(lastNotes));
+    start(shuffle(all).slice(0, Math.min(parseInt($("nq-count").value, 10), all.length)));
+  });
+  $("nq-retry").addEventListener("click", function () { start(shuffle(missed)); });
+
+  document.addEventListener("keydown", function (e) {
+    if ($("nq-quiz").hidden || answered || /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) return;
+    var i = "1234".indexOf(e.key);
+    if (i === -1) i = "abcd".indexOf(e.key.toLowerCase());
+    var opts = document.querySelectorAll(".nq-option");
+    if (i !== -1 && opts[i]) opts[i].click();
+  });
+
+  var saved = load("nq-notes");
+  if (saved) ta.value = saved;
+
+  window.nqParse = parseNotes; window.nqBuild = buildQuestions; // handy for testing in the browser console
+})();
+</script>
+
+</body>
+</html>
