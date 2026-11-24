@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<!--
+  Author: Matthew Parker
+  GU username: mparker13
+  Course: BMIS 235 - HTML-4
+  Page: Path Trainer, a practice tool for links and file paths
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="author" content="Matthew Parker">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Path Trainer</title>
+
+<!-- this one line connects the page to the stylesheet -->
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ===== MENU ===== same menu on every page ===== -->
+<nav>
+    <a href="index.html"><img src="img/home.png" alt="Home"></a>
+    <a href="kalua.html"><img src="img/kalua.png" alt="Kalua Pork"></a>
+    <a href="katsu.html"><img src="img/katsu.png" alt="Chicken Katsu"></a>
+    <a href="kalbi.html"><img src="img/kalbi.png" alt="Kalbi"></a>
+    <a href="paths.html"><img src="img/paths.png" alt="Path Trainer"></a>
+</nav>
+
+<h1>Path Trainer</h1>
+<p>Every link, image, and stylesheet on this site depends on one thing: a path that tells the browser where to find a file. Get one character wrong and you get a broken image or a "404 Not Found." This page is for practicing paths by doing them, using the real folder layout of this site.</p>
+
+<div class="pt">
+
+  <!-- the site's folders, drawn as a tree. JavaScript highlights where a path goes. -->
+  <div class="pt-panel pt-treebox">
+    <div class="pt-label">This site's folders</div>
+    <ul class="pt-tree" id="pt-tree"></ul>
+    <div class="pt-legend"><span class="pt-here-dot"></span> you are here &nbsp; <span class="pt-ok-dot"></span> path found it &nbsp; <span class="pt-bad-dot"></span> path went wrong</div>
+  </div>
+
+  <div class="pt-modes" role="tablist">
+    <button type="button" class="pt-mode is-on" data-mode="write" role="tab" aria-selected="true">Write the path</button>
+    <button type="button" class="pt-mode" data-mode="debug" role="tab" aria-selected="false">Fix the broken menu</button>
+  </div>
+
+  <div class="pt-score" id="pt-score">Right on the first try: 0 of 0 &middot; Streak: 0</div>
+
+  <!-- ===== MODE 1: WRITE THE PATH ===== -->
+  <section class="pt-panel" id="pt-write">
+    <div class="pt-levels">
+      <span class="pt-label">Level:</span>
+      <button type="button" class="pt-level is-on" data-level="1">1 &middot; Same folder</button>
+      <button type="button" class="pt-level" data-level="2">2 &middot; Into a folder</button>
+      <button type="button" class="pt-level" data-level="3">3 &middot; Up a folder</button>
+      <button type="button" class="pt-level" data-level="mix">Mix</button>
+    </div>
+    <p class="pt-task" id="pt-task"></p>
+    <div class="pt-code" id="pt-codeline"></div>
+    <div class="pt-buttons">
+      <button type="button" class="pt-btn" id="pt-check">Check</button>
+      <button type="button" class="pt-btn pt-btn-light" id="pt-hint">Hint</button>
+      <button type="button" class="pt-btn pt-btn-light" id="pt-show">Show answer</button>
+      <button type="button" class="pt-btn pt-btn-light" id="pt-next">Next question</button>
+    </div>
+    <div class="pt-feedback" id="pt-feedback" aria-live="polite"></div>
+  </section>
+
+  <!-- ===== MODE 2: FIX THE BROKEN MENU ===== -->
+  <section class="pt-panel" id="pt-debug" hidden>
+    <p class="pt-task" id="pt-dtask"></p>
+    <div class="pt-label">What the browser shows (click the buttons to test the links):</div>
+    <div class="pt-preview" id="pt-preview"></div>
+    <div class="pt-status" id="pt-status" aria-live="polite">Click a menu button to see where it goes.</div>
+    <div class="pt-label">The code. One path is broken. Click the line you think it's on.</div>
+    <div class="pt-lines" id="pt-lines"></div>
+    <div class="pt-fix" id="pt-fix" hidden>
+      <div class="pt-code" id="pt-fixline"></div>
+      <div class="pt-buttons">
+        <button type="button" class="pt-btn" id="pt-fixcheck">Check my fix</button>
+      </div>
+    </div>
+    <div class="pt-feedback" id="pt-dfeedback" aria-live="polite"></div>
+    <div class="pt-buttons">
+      <button type="button" class="pt-btn pt-btn-light" id="pt-dnext">New broken menu</button>
+    </div>
+  </section>
+
+  <details class="pt-panel pt-rules">
+    <summary>The rules, all in one place</summary>
+    <ul>
+      <li><strong>A path starts from the file you're editing.</strong> The browser starts in the folder that holds the current page, then follows the path from there.</li>
+      <li><strong>Same folder:</strong> just the file name. From <code>index.html</code> to the Kalbi page: <code>kalbi.html</code></li>
+      <li><strong>Into a folder:</strong> folder name, a slash, then the file. From <code>index.html</code> to an image: <code>img/kalbi.png</code></li>
+      <li><strong>Up a folder:</strong> <code>../</code> means "go up one level." From <code>recipes/spam-musubi.html</code> back to the stylesheet: <code>../styles.css</code></li>
+      <li><strong>Capital letters count.</strong> GitHub Pages and Cloudflare treat <code>Kalbi.png</code> and <code>kalbi.png</code> as different files. Your laptop usually doesn't, so a path can work when you test it at home and break once it's live.</li>
+      <li><strong>Use forward slashes</strong> <code>/</code> in web paths, never the Windows backslash <code>\</code>.</li>
+      <li><strong>Don't start with <code>/</code>.</strong> A leading slash jumps to the top of the whole domain, not your project folder. On GitHub Pages your site sits in a subfolder (<code>username.github.io/bmis235-html-4/</code>), so <code>/img/kalbi.png</code> looks in the wrong place.</li>
+      <li><strong>Spell the extension exactly.</strong> <code>kalbi.htm</code> and <code>kalbi.html</code> are two different files, and so are <code>.png</code> and <code>.jpg</code>.</li>
+    </ul>
+  </details>
+
+</div>
+
+<footer>Built by Matthew Parker &middot; BMIS 235 &middot; Path Trainer built with Claude (AI)</footer>
+
+<!-- JavaScript: the path checker and both practice modes.
+     The checker follows a path one step at a time through the site's real folder layout,
+     the same way a browser does, and explains exactly where it went wrong. -->
+<script>
+(function () {
+  // ---------- the site's files ----------
+  // recipes/ is a pretend folder that only exists here, so there's something to practice ../ on.
+  var FILES = [
+    "index.html", "kalua.html", "katsu.html", "kalbi.html", "paths.html", "styles.css",
+    "img/home.png", "img/kalua.png", "img/katsu.png", "img/kalbi.png", "img/paths.png",
+    "recipes/spam-musubi.html"
+  ];
+  var FOLDERS = ["img", "recipes"];
+  var SITE = "bmis235-html-4";
+
+  var PAGES = [
+    { file: "index.html", name: "Home", img: "img/home.png" },
+    { file: "kalua.html", name: "Kalua Pork", img: "img/kalua.png" },
+    { file: "katsu.html", name: "Chicken Katsu", img: "img/katsu.png" },
+    { file: "kalbi.html", name: "Kalbi", img: "img/kalbi.png" },
+    { file: "paths.html", name: "Path Trainer", img: "img/paths.png" }
+  ];
+  var REAL_PAGES = ["index.html", "kalua.html", "katsu.html", "kalbi.html"];
+  var DEEP_PAGE = "recipes/spam-musubi.html";
+
+  // ---------- small helpers ----------
+  function has(list, x) { return list.indexOf(x) !== -1; }
+  function pick(list) { return list[Math.floor(Math.random() * list.length)]; }
+  function dirParts(path) { var i = path.lastIndexOf("/"); return i < 0 ? [] : path.slice(0, i).split("/"); }
+  function baseName(path) { return path.slice(path.lastIndexOf("/") + 1); }
+  function folderName(parts) { return parts.length ? parts.join("/") + "/" : "the main " + SITE + " folder"; }
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text !== undefined) e.textContent = text;
+    return e;
+  }
+  function code(text) { return el("code", "", text); }
+
+  // the correct relative path from one file to another (used for "Show answer")
+  function relPath(from, to) {
+    var a = dirParts(from), b = dirParts(to), i = 0;
+    while (i < a.length && i < b.length && a[i] === b[i]) i++;
+    var up = "";
+    for (var k = i; k < a.length; k++) up += "../";
+    var down = b.slice(i);
+    return up + (down.length ? down.join("/") + "/" : "") + baseName(to);
+  }
+
+  // small spelling distance, so we can say "did you mean ...?"
+  function distance(a, b) {
+    var d = [], i, j;
+    for (i = 0; i <= a.length; i++) { d[i] = [i]; }
+    for (j = 0; j <= b.length; j++) { d[0][j] = j; }
+    for (i = 1; i <= a.length; i++) {
+      for (j = 1; j <= b.length; j++) {
+        d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+        if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) d[i][j] = Math.min(d[i][j], d[i - 2][j - 2] + 1);
+      }
+    }
+    return d[a.length][b.length];
+  }
+
+  // ---------- THE PATH CHECKER ----------
+  // Follows a path from a file, step by step, like a browser.
+  // Returns { ok, found, msg, trace[], visited[], resolved }
+  function follow(from, raw, target) {
+    var r = { ok: false, found: false, msg: "", trace: [], visited: [], resolved: null };
+    var s = raw.trim();
+
+    if (!s) { r.msg = "Type a path in the box first."; return r; }
+    if (/^["']|["']$/.test(s)) { r.msg = "Leave out the quote marks. They're already in the code around the box."; return r; }
+    if (/^https?:\/\//i.test(s)) { r.msg = "That's a full web address (a URL). Those are for other people's sites. For a file in your own site, write a path that starts from the page you're on."; return r; }
+    if (/^[a-z]:/i.test(s) || /^file:/i.test(s) || /^~/.test(s) || /^\/(Users|home)\//.test(s)) {
+      r.msg = "That's a path on your own computer. Nobody visiting your site has that folder, so it breaks once it's online. Start from the page you're editing instead."; return r;
+    }
+    if (s.indexOf("\\") !== -1) { r.msg = "Swap the backslash \\ for a forward slash /. Windows folders use \\, but web paths use /. Some browsers quietly fix it, but you shouldn't count on that."; return r; }
+    if (s.charAt(0) === "/") { r.msg = "Drop the slash at the start. A leading / jumps to the top of the whole domain, not your project. On GitHub Pages your site is inside a subfolder, so this would look in the wrong place."; return r; }
+    if (s.indexOf("//") !== -1) { r.msg = "There are two slashes in a row. Each folder needs exactly one / after it."; return r; }
+
+    var parts = s.split("/");
+    var cur = dirParts(from);
+    r.trace.push({ good: true, text: "Start in the folder that holds " + from + ": " + folderName(cur) });
+    r.visited.push(cur.join("/"));
+
+    for (var i = 0; i < parts.length; i++) {
+      var seg = parts[i];
+      var last = i === parts.length - 1;
+
+      if (seg === ".") { r.trace.push({ good: true, text: "./ means \"stay in this folder\"" }); continue; }
+
+      if (seg === "..") {
+        if (!cur.length) {
+          r.trace.push({ good: false, text: "../ tries to go up, but you're already at the top of the site" });
+          r.msg = "Too many ../ steps. You're already in the main " + SITE + " folder, so there's nowhere higher to go. Each ../ goes up exactly one level.";
+          return r;
+        }
+        cur.pop();
+        r.trace.push({ good: true, text: "../ goes up one level to " + folderName(cur) });
+        r.visited.push(cur.join("/"));
+        continue;
+      }
+
+      if (last && seg === "") {
+        r.trace.push({ good: false, text: "The path ends with /, so it points at a folder" });
+        r.msg = "Your path ends at a folder, not a file. Add the file name after the last /.";
+        return r;
+      }
+
+      if (!last) {
+        var want = cur.concat(seg).join("/");
+        if (has(FOLDERS, want)) {
+          cur.push(seg);
+          r.trace.push({ good: true, text: "Go into the " + seg + "/ folder" });
+          r.visited.push(want);
+          continue;
+        }
+        r.trace.push({ good: false, text: "Look for a folder named \"" + seg + "\" in " + folderName(cur) + ": not there" });
+        var fMatch = FOLDERS.filter(function (f) { return f.toLowerCase() === want.toLowerCase(); })[0];
+        if (fMatch) {
+          r.msg = "Check the capital letters. The folder is named " + baseName(fMatch) + "/, not " + seg + "/. Live web servers treat those as different names.";
+        } else if (has(FOLDERS, seg) && cur.length) {
+          r.msg = "There is a " + seg + "/ folder, but it's one level up, not inside " + folderName(cur) + ". You need ../ first.";
+        } else if (has(FILES, want) || FILES.some(function (f) { return baseName(f) === seg; })) {
+          r.msg = "\"" + seg + "\" is a file, not a folder, so you can't go inside it. Only folder names come before a /.";
+        } else {
+          r.msg = "There's no folder named \"" + seg + "\" in " + folderName(cur) + ". Check the folder tree.";
+        }
+        return r;
+      }
+
+      // last part: the file itself
+      var resolved = cur.concat(seg).join("/");
+      r.resolved = resolved;
+      r.visited.push(resolved);
+
+      if (has(FILES, resolved)) {
+        r.found = true;
+        r.trace.push({ good: true, text: "Find " + seg + " there: found it" });
+        if (!target || resolved === target) {
+          r.ok = true;
+          r.msg = "Correct. The browser finds " + resolved + ".";
+        } else {
+          r.msg = "That path works, but it leads to " + resolved + ", not " + target + ".";
+        }
+        return r;
+      }
+
+      r.trace.push({ good: false, text: "Look for " + seg + " in " + folderName(cur) + ": not there (404 Not Found)" });
+
+      if (has(FOLDERS, resolved)) { r.msg = "\"" + seg + "\" is a folder. Add / and then the file name that's inside it."; return r; }
+
+      var caseMatch = FILES.filter(function (f) { return f.toLowerCase() === resolved.toLowerCase(); })[0];
+      if (caseMatch) {
+        r.msg = "So close. Check the capital letters: the file is named " + baseName(caseMatch) + ". Live web servers like GitHub Pages and Cloudflare treat " + seg + " and " + baseName(caseMatch) + " as different files, even if it works on your laptop.";
+        return r;
+      }
+      if (/\s/.test(seg)) { r.msg = "There's a space in the path. None of the file names on this site have spaces in them."; return r; }
+
+      var stem = seg.replace(/\.[^.]*$/, "");
+      if (stem === seg) {
+        var withExt = FILES.filter(function (f) { return f.replace(/\.[^.]*$/, "") === resolved; })[0];
+        if (withExt) {
+          var ext = withExt.slice(withExt.lastIndexOf("."));
+          r.msg = "You're missing the file extension. The file is " + baseName(withExt) + ", so add " + ext + " to the end." +
+            (ext === ".html" ? " (GitHub Pages and Cloudflare might still find the page without it, but it won't work when you open the file on your own computer. Write the full name.)" : "");
+          return r;
+        }
+      } else {
+        var sameStem = FILES.filter(function (f) { return f.replace(/\.[^.]*$/, "") === cur.concat(stem).join("/"); })[0];
+        if (sameStem) {
+          r.msg = "Check the file extension. The file ends in " + sameStem.slice(sameStem.lastIndexOf(".")) + ", not " + seg.slice(seg.lastIndexOf(".")) + ". Those are two different files.";
+          return r;
+        }
+      }
+
+      var elsewhere = FILES.filter(function (f) { return baseName(f) === seg; })[0];
+      if (elsewhere) {
+        var where = dirParts(elsewhere);
+        var myDepth = cur.length, itsDepth = where.length;
+        var tip = itsDepth > myDepth ? " You need to go into that folder first." :
+                  itsDepth < myDepth ? " You need ../ to go up a level first." : "";
+        r.msg = "There is a " + seg + ", but it lives in " + folderName(where) + ", and your path looked for it in " + folderName(cur) + "." + tip;
+        return r;
+      }
+
+      var neighbors = FILES.filter(function (f) { return dirParts(f).join("/") === cur.join("/") && distance(baseName(f).toLowerCase(), seg.toLowerCase()) <= 2; });
+      if (neighbors.length) { r.msg = "Check your spelling. Did you mean " + baseName(neighbors[0]) + "?"; return r; }
+
+      var anywhere = FILES.filter(function (f) { return distance(baseName(f).toLowerCase(), seg.toLowerCase()) <= 2; })[0];
+      if (anywhere) { r.msg = "Check your spelling. The closest file is " + baseName(anywhere) + ", which is in " + folderName(dirParts(anywhere)) + "."; return r; }
+
+      r.msg = "There's no file called " + seg + " anywhere on this site. Check the folder tree for the right name.";
+      return r;
+    }
+    return r;
+  }
+
+  // ---------- folder tree ----------
+  var treeEl = document.getElementById("pt-tree");
+  var TREE = [
+    { path: "", label: SITE + "/", folder: true, depth: 0 },
+    { path: "index.html", label: "index.html", depth: 1 },
+    { path: "kalua.html", label: "kalua.html", depth: 1 },
+    { path: "katsu.html", label: "katsu.html", depth: 1 },
+    { path: "kalbi.html", label: "kalbi.html", depth: 1 },
+    { path: "paths.html", label: "paths.html", depth: 1 },
+    { path: "styles.css", label: "styles.css", depth: 1 },
+    { path: "img", label: "img/", folder: true, depth: 1 },
+    { path: "img/home.png", label: "home.png", depth: 2 },
+    { path: "img/kalua.png", label: "kalua.png", depth: 2 },
+    { path: "img/katsu.png", label: "katsu.png", depth: 2 },
+    { path: "img/kalbi.png", label: "kalbi.png", depth: 2 },
+    { path: "img/paths.png", label: "paths.png", depth: 2 },
+    { path: "recipes", label: "recipes/", folder: true, depth: 1, note: "pretend folder, for practice" },
+    { path: "recipes/spam-musubi.html", label: "spam-musubi.html", depth: 2 }
+  ];
+  var treeNodes = {};
+  TREE.forEach(function (n) {
+    var li = el("li", "pt-node" + (n.folder ? " is-folder" : ""));
+    li.style.paddingLeft = (n.depth * 22 + 6) + "px";
+    li.appendChild(el("span", "pt-icon", n.folder ? "📁" : (/\.png$/.test(n.label) ? "🖼️" : "📄")));
+    li.appendChild(el("span", "pt-name", n.label));
+    if (n.note) li.appendChild(el("span", "pt-note", " (" + n.note + ")"));
+    treeEl.appendChild(li);
+    treeNodes[n.path] = li;
+  });
+
+  function paintTree(here, result) {
+    TREE.forEach(function (n) { treeNodes[n.path].classList.remove("is-here", "is-walk", "is-found", "is-bad"); });
+    if (treeNodes[here]) treeNodes[here].classList.add("is-here");
+    if (!result) return;
+    result.visited.forEach(function (p) { if (treeNodes[p]) treeNodes[p].classList.add("is-walk"); });
+    if (result.resolved) {
+      if (result.found && treeNodes[result.resolved]) treeNodes[result.resolved].classList.add("is-found");
+      else {
+        var parent = dirParts(result.resolved).join("/");
+        if (treeNodes[parent]) treeNodes[parent].classList.add("is-bad");
+      }
+    }
+  }
+
+  function showResult(box, result, extra) {
+    box.innerHTML = "";
+    box.className = "pt-feedback " + (result.ok ? "is-good" : "is-bad");
+    box.appendChild(el("p", "pt-verdict", (result.ok ? "✔ " : "✖ ") + result.msg));
+    if (result.trace.length) {
+      var ol = el("ol", "pt-trace");
+      result.trace.forEach(function (t) { ol.appendChild(el("li", t.good ? "is-good" : "is-bad", t.text)); });
+      box.appendChild(el("div", "pt-label", "How the browser followed your path:"));
+      box.appendChild(ol);
+    }
+    if (extra) box.appendChild(el("p", "", extra));
+  }
+
+  // ---------- score ----------
+  var score = { right: 0, total: 0, streak: 0 };
+  function scored(firstTryRight) {
+    score.total++;
+    if (firstTryRight) { score.right++; score.streak++; } else { score.streak = 0; }
+    document.getElementById("pt-score").textContent =
+      "Right on the first try: " + score.right + " of " + score.total + " · Streak: " + score.streak;
+  }
+
+  // ---------- MODE 1: write the path ----------
+  var level = "1", q = null, tried = false;
+  var taskEl = document.getElementById("pt-task"), lineEl = document.getElementById("pt-codeline"), fbEl = document.getElementById("pt-feedback");
+  var input;
+
+  function pageName(file) { var p = PAGES.filter(function (x) { return x.file === file; })[0]; return p ? p.name : file; }
+
+  function makeQuestion(lv) {
+    if (lv === "mix") lv = pick(["1", "2", "3"]);
+    var from, kind, target, otherPages;
+    if (lv === "3") {
+      from = DEEP_PAGE;
+      kind = pick(["a", "img", "link"]);
+    } else {
+      from = pick(REAL_PAGES);
+      kind = lv === "1" ? pick(["a", "a", "link"]) : "img";
+    }
+    otherPages = PAGES.filter(function (p) { return p.file !== from; });
+    var p = pick(otherPages);
+    if (kind === "a") target = p.file;
+    if (kind === "img") target = p.img;
+    if (kind === "link") target = "styles.css";
+    return { level: lv, from: from, kind: kind, target: target, name: p.name };
+  }
+
+  function renderQuestion(noFocus) {
+    q = makeQuestion(level);
+    tried = false;
+    var what = q.kind === "a" ? "a link to the " + q.name + " page (" + q.target + ")" :
+               q.kind === "img" ? "the " + q.name + " menu image (" + q.target + ")" :
+               "the stylesheet (styles.css)";
+    taskEl.innerHTML = "";
+    taskEl.appendChild(document.createTextNode("You're editing "));
+    taskEl.appendChild(code(q.from));
+    taskEl.appendChild(document.createTextNode(". Write the path for " + what + "."));
+
+    lineEl.innerHTML = "";
+    input = el("input", "pt-input");
+    input.type = "text";
+    input.setAttribute("aria-label", "Your path");
+    input.setAttribute("autocomplete", "off");
+    input.setAttribute("autocapitalize", "off");
+    input.setAttribute("spellcheck", "false");
+    input.addEventListener("keydown", function (e) {
+      if (e.key !== "Enter") return;
+      if (fbEl.classList.contains("is-good")) renderQuestion(); else checkAnswer();
+    });
+    var before, after;
+    if (q.kind === "a") { before = '<a href="'; after = '">' + q.name + "</a>"; }
+    if (q.kind === "img") { before = '<img src="'; after = '" alt="' + q.name + '">'; }
+    if (q.kind === "link") { before = '<link rel="stylesheet" href="'; after = '">'; }
+    lineEl.appendChild(document.createTextNode(before));
+    lineEl.appendChild(input);
+    lineEl.appendChild(document.createTextNode(after));
+
+    fbEl.innerHTML = ""; fbEl.className = "pt-feedback";
+    paintTree(q.from, null);
+    if (noFocus !== true) input.focus({ preventScroll: true });
+  }
+
+  function checkAnswer() {
+    var result = follow(q.from, input.value, q.target);
+    if (!tried && input.value.trim()) { scored(result.ok); tried = true; }
+    paintTree(q.from, result);
+    showResult(fbEl, result, result.ok ? "Hit \"Next question\" (or Enter again) for another one." : "");
+  }
+
+  document.getElementById("pt-check").addEventListener("click", checkAnswer);
+  document.getElementById("pt-next").addEventListener("click", function () { renderQuestion(); });
+  document.getElementById("pt-hint").addEventListener("click", function () {
+    var hint;
+    var fromDir = dirParts(q.from), toDir = dirParts(q.target);
+    if (fromDir.length > toDir.length) hint = "You're inside the " + fromDir.join("/") + "/ folder. Use ../ to go up to the main folder first" + (toDir.length ? ", then go into " + toDir.join("/") + "/." : ".");
+    else if (toDir.length > fromDir.length) hint = "The file is inside the " + toDir.join("/") + "/ folder. Write the folder name, a slash, then the file name.";
+    else hint = "Both files are in the same folder, so the path is just the file name.";
+    fbEl.className = "pt-feedback is-hint";
+    fbEl.innerHTML = "";
+    fbEl.appendChild(el("p", "", "Hint: " + hint));
+  });
+  document.getElementById("pt-show").addEventListener("click", function () {
+    if (!tried) { scored(false); tried = true; }
+    input.value = relPath(q.from, q.target);
+    var result = follow(q.from, input.value, q.target);
+    paintTree(q.from, result);
+    showResult(fbEl, result, "That's the answer. Read the steps above, then try the next one on your own.");
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll(".pt-level"), function (b) {
+    b.addEventListener("click", function () {
+      Array.prototype.forEach.call(document.querySelectorAll(".pt-level"), function (x) { x.classList.remove("is-on"); });
+      b.classList.add("is-on");
+      level = b.getAttribute("data-level");
+      renderQuestion();
+    });
+  });
+
+  // ---------- MODE 2: fix the broken menu ----------
+  var dq = null, dTried = false, dFound = false;
+  var dTask = document.getElementById("pt-dtask"), preview = document.getElementById("pt-preview"), statusEl = document.getElementById("pt-status");
+  var linesEl = document.getElementById("pt-lines"), fixBox = document.getElementById("pt-fix"), fixLine = document.getElementById("pt-fixline");
+  var dfb = document.getElementById("pt-dfeedback"), fixInput;
+
+  // ways to break a path. Each one really breaks on a live server.
+  var BUGS = {
+    capital: function (p) { var b = baseName(p); return p.slice(0, p.length - b.length) + b.charAt(0).toUpperCase() + b.slice(1); },
+    noFolder: function (p) { return p.indexOf("img/") === -1 ? null : p.replace("img/", ""); },
+    extension: function (p) { return /\.html$/.test(p) ? p.replace(/\.html$/, ".htm") : p.replace(/\.png$/, ".jpg"); },
+    typo: function (p) {
+      var b = baseName(p), stem = b.replace(/\.[^.]*$/, ""), ext = b.slice(stem.length);
+      for (var tries = 0; tries < 10; tries++) {
+        var i = 1 + Math.floor(Math.random() * (stem.length - 2));
+        var s = stem.slice(0, i) + stem.charAt(i + 1) + stem.charAt(i) + stem.slice(i + 2);
+        if (s !== stem) return p.slice(0, p.length - b.length) + s + ext;
+      }
+      return null;
+    },
+    noUp: function (p) { return p.indexOf("../") === 0 ? p.slice(3) : null; }
+  };
+
+  function makeMenu() {
+    var from = Math.random() < 0.35 ? DEEP_PAGE : pick(REAL_PAGES);
+    var items = PAGES.map(function (p) {
+      return { name: p.name, href: relPath(from, p.file), hrefTarget: p.file, src: relPath(from, p.img), srcTarget: p.img };
+    });
+    var bugNames = Object.keys(BUGS);
+    if (from === DEEP_PAGE) bugNames.push("noUp", "noUp");
+    var broken = null, guard = 0;
+    while (!broken && guard++ < 100) {
+      var idx = Math.floor(Math.random() * items.length);
+      var attr = Math.random() < 0.5 ? "href" : "src";
+      var bug = pick(bugNames);
+      var bad = BUGS[bug](items[idx][attr]);
+      if (bad && bad !== items[idx][attr] && !follow(from, bad, items[idx][attr + "Target"]).ok) {
+        items[idx][attr] = bad;
+        broken = { index: idx, attr: attr };
+      }
+    }
+    return { from: from, items: items, broken: broken };
+  }
+
+  function lineText(it) { return '<a href="' + it.href + '"><img src="' + it.src + '" alt="' + it.name + '"></a>'; }
+
+  function renderMenu() {
+    dq = makeMenu(); dTried = false; dFound = false;
+    dTask.innerHTML = "";
+    dTask.appendChild(document.createTextNode("This is the menu code inside "));
+    dTask.appendChild(code(dq.from));
+    dTask.appendChild(document.createTextNode(". A classmate says something in it is broken. Test the menu, then find the bad line."));
+
+    // preview: images that resolve show for real; broken ones show their alt text, like a real browser
+    preview.innerHTML = "";
+    dq.items.forEach(function (it) {
+      var a = el("button", "pt-pv");
+      a.type = "button";
+      var img = follow(dq.from, it.src, it.srcTarget);
+      if (img.found) {
+        var im = document.createElement("img");
+        im.src = img.resolved; // this page sits in the main folder, so the resolved path works from here
+        im.alt = it.name;
+        a.appendChild(im);
+      } else {
+        a.appendChild(el("span", "pt-broken-img", it.name));
+        a.title = "broken image: the browser shows the alt text instead";
+      }
+      a.addEventListener("click", function () {
+        var res = follow(dq.from, it.href, it.hrefTarget);
+        statusEl.className = "pt-status " + (res.found ? "is-good" : "is-bad");
+        statusEl.textContent = res.found ? "✔ That button opens " + res.resolved + "." : "✖ 404 Not Found. That button's link goes nowhere.";
+      });
+      preview.appendChild(a);
+    });
+    statusEl.className = "pt-status";
+    statusEl.textContent = "Click a menu button to see where it goes.";
+
+    linesEl.innerHTML = "";
+    linesEl.appendChild(el("div", "pt-line pt-line-fixed", "<nav>"));
+    dq.items.forEach(function (it, i) {
+      var b = el("button", "pt-line", "    " + lineText(it));
+      b.type = "button";
+      b.addEventListener("click", function () { pickLine(i, b); });
+      linesEl.appendChild(b);
+    });
+    linesEl.appendChild(el("div", "pt-line pt-line-fixed", "</nav>"));
+
+    fixBox.hidden = true;
+    dfb.innerHTML = ""; dfb.className = "pt-feedback";
+    paintTree(dq.from, null);
+  }
+
+  function pickLine(i, btn) {
+    if (dFound) return;
+    var it = dq.items[i];
+    if (i !== dq.broken.index) {
+      if (!dTried) { scored(false); dTried = true; }
+      btn.classList.add("is-wrong");
+      var r1 = follow(dq.from, it.src, it.srcTarget);
+      dfb.className = "pt-feedback is-bad";
+      dfb.innerHTML = "";
+      dfb.appendChild(el("p", "pt-verdict", "✖ That line is fine. Both of its paths work: " + it.href + " finds " + it.hrefTarget + ", and " + it.src + " finds " + it.srcTarget + ". Keep looking."));
+      paintTree(dq.from, r1);
+      return;
+    }
+    if (!dTried) { scored(true); dTried = true; }
+    dFound = true;
+    btn.classList.add("is-picked");
+    var bad = it[dq.broken.attr], target = it[dq.broken.attr + "Target"];
+    var r = follow(dq.from, bad, target);
+    paintTree(dq.from, r);
+    showResult(dfb, r, "Now fix it: type the correct " + dq.broken.attr + " below.");
+
+    fixBox.hidden = false;
+    fixLine.innerHTML = "";
+    fixInput = el("input", "pt-input");
+    fixInput.type = "text";
+    fixInput.value = bad;
+    fixInput.setAttribute("aria-label", "Fixed path");
+    fixInput.setAttribute("autocomplete", "off");
+    fixInput.setAttribute("autocapitalize", "off");
+    fixInput.setAttribute("spellcheck", "false");
+    fixInput.addEventListener("keydown", function (e) { if (e.key === "Enter") checkFix(); });
+    if (dq.broken.attr === "href") {
+      fixLine.appendChild(document.createTextNode('<a href="'));
+      fixLine.appendChild(fixInput);
+      fixLine.appendChild(document.createTextNode('"><img src="' + it.src + '" alt="' + it.name + '"></a>'));
+    } else {
+      fixLine.appendChild(document.createTextNode('<a href="' + it.href + '"><img src="'));
+      fixLine.appendChild(fixInput);
+      fixLine.appendChild(document.createTextNode('" alt="' + it.name + '"></a>'));
+    }
+    fixInput.focus({ preventScroll: true });
+  }
+
+  function checkFix() {
+    var it = dq.items[dq.broken.index];
+    var target = it[dq.broken.attr + "Target"];
+    var r = follow(dq.from, fixInput.value, target);
+    paintTree(dq.from, r);
+    showResult(dfb, r, r.ok ? "Menu fixed. Hit \"New broken menu\" for another one." : "");
+  }
+
+  document.getElementById("pt-fixcheck").addEventListener("click", checkFix);
+  document.getElementById("pt-dnext").addEventListener("click", renderMenu);
+
+  // ---------- switching modes ----------
+  Array.prototype.forEach.call(document.querySelectorAll(".pt-mode"), function (b) {
+    b.addEventListener("click", function () {
+      Array.prototype.forEach.call(document.querySelectorAll(".pt-mode"), function (x) { x.classList.remove("is-on"); x.setAttribute("aria-selected", "false"); });
+      b.classList.add("is-on"); b.setAttribute("aria-selected", "true");
+      var debug = b.getAttribute("data-mode") === "debug";
+      document.getElementById("pt-write").hidden = debug;
+      document.getElementById("pt-debug").hidden = !debug;
+      if (debug) { if (!dq) renderMenu(); else paintTree(dq.from, null); }
+      else paintTree(q.from, null);
+    });
+  });
+
+  renderQuestion(true);
+  window.ptFollow = follow; // handy for testing in the browser console
+})();
+</script>
+
+</body>
+</html>

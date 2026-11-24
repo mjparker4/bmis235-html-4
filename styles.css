@@ -53,3 +53,208 @@ footer {
     color: #777777;
     margin-top: 40px;
 }
+
+/* =====================================================================
+   Path Trainer (paths.html)
+   Every rule starts with .pt so it can't change the other pages.
+   Same brand: blue #0077B6, orange #F4A261, Verdana.
+   ===================================================================== */
+
+.pt {
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+.pt code,
+.pt .pt-code,
+.pt .pt-line,
+.pt .pt-tree,
+.pt .pt-input {
+    font-family: Menlo, Consolas, "Courier New", monospace;
+}
+
+.pt-panel {
+    background-color: #ffffff;
+    border: 2px solid #0077B6;
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin: 18px 0;
+}
+
+.pt-label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #0077B6;
+    margin: 10px 0 6px 0;
+}
+
+/* the folder tree */
+.pt-tree {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 15px;
+}
+.pt-node {
+    padding: 3px 6px;
+    border-radius: 6px;
+    border-left: 4px solid transparent;
+}
+.pt-node.is-folder .pt-name { font-weight: bold; }
+.pt-note { color: #777777; font-size: 12px; font-family: Verdana, Geneva, sans-serif; }
+.pt-icon { margin-right: 6px; }
+.pt-node.is-walk { background-color: #e6f2fa; }
+.pt-node.is-here { border-left-color: #0077B6; background-color: #cfe6f5; }
+.pt-node.is-found { background-color: #d8f3dc; border-left-color: #2d9a4b; }
+.pt-node.is-bad { background-color: #fde2e1; border-left-color: #d1495b; }
+.pt-legend { font-size: 12px; color: #555555; margin-top: 10px; }
+.pt-here-dot, .pt-ok-dot, .pt-bad-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    vertical-align: middle;
+}
+.pt-here-dot { background-color: #0077B6; }
+.pt-ok-dot { background-color: #2d9a4b; }
+.pt-bad-dot { background-color: #d1495b; }
+
+/* mode tabs and level buttons */
+.pt-modes { display: flex; gap: 8px; }
+.pt-mode, .pt-level, .pt-btn {
+    font-family: Verdana, Geneva, sans-serif;
+    border: 2px solid #0077B6;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: #0077B6;
+    padding: 8px 14px;
+    font-size: 15px;
+    cursor: pointer;
+}
+.pt-mode { flex: 1; font-weight: bold; font-size: 16px; padding: 12px; }
+.pt-mode.is-on, .pt-level.is-on, .pt-btn {
+    background-color: #0077B6;
+    color: #ffffff;
+}
+.pt-btn-light { background-color: #ffffff; color: #0077B6; }
+.pt-mode:hover, .pt-level:hover, .pt-btn:hover { border-color: #F4A261; }
+.pt-mode:focus-visible, .pt-level:focus-visible, .pt-btn:focus-visible, .pt-line:focus-visible, .pt-pv:focus-visible {
+    outline: 3px solid #F4A261;
+    outline-offset: 2px;
+}
+.pt-levels { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.pt-levels .pt-label { margin: 0 4px 0 0; }
+.pt-level { font-size: 13px; padding: 6px 10px; }
+.pt-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+
+.pt-score {
+    text-align: center;
+    font-size: 14px;
+    color: #2b2b2b;
+    background-color: #F4A261;
+    border-radius: 8px;
+    padding: 6px;
+    margin-top: 12px;
+}
+
+/* the question and the code line with the box in it */
+.pt-task { max-width: none; margin: 14px 0 10px 0; font-size: 17px; }
+.pt-code {
+    background-color: #1e2a35;
+    color: #f2f2f2;
+    border-radius: 8px;
+    padding: 14px;
+    font-size: 15px;
+    line-height: 2;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+.pt-input {
+    font-size: 15px;
+    width: 15em;
+    padding: 4px 6px;
+    border: 2px solid #F4A261;
+    border-radius: 4px;
+    background-color: #ffffff;
+    color: #1e2a35;
+}
+
+/* feedback after Check */
+.pt-feedback { margin-top: 12px; }
+.pt-feedback:empty { display: none; }
+.pt-feedback p { max-width: none; margin: 8px 0; font-size: 16px; }
+.pt-feedback.is-good, .pt-feedback.is-bad, .pt-feedback.is-hint {
+    border-radius: 8px;
+    padding: 4px 14px 10px 14px;
+}
+.pt-feedback.is-good { background-color: #d8f3dc; }
+.pt-feedback.is-bad { background-color: #fde2e1; }
+.pt-feedback.is-hint { background-color: #fff3e6; }
+.pt-verdict { font-weight: bold; }
+.pt-trace { margin: 4px 0 0 0; padding-left: 22px; font-size: 14px; line-height: 1.6; }
+.pt-trace li.is-good::marker { color: #2d9a4b; }
+.pt-trace li.is-bad { color: #a4161a; font-weight: bold; }
+
+/* broken-menu debugger */
+.pt-preview {
+    background-color: #0077B6;
+    padding: 10px;
+    text-align: center;
+    border-radius: 8px;
+}
+.pt-pv {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 4px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+.pt-pv img { height: 40px; display: block; }
+.pt-broken-img {
+    display: inline-block;
+    height: 36px;
+    line-height: 36px;
+    padding: 0 12px;
+    border: 2px dashed #ffffff;
+    color: #ffffff;
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 13px;
+}
+.pt-status { font-size: 14px; margin: 8px 0 4px 0; color: #555555; }
+.pt-status.is-good { color: #1b6b32; font-weight: bold; }
+.pt-status.is-bad { color: #a4161a; font-weight: bold; }
+.pt-lines {
+    background-color: #1e2a35;
+    border-radius: 8px;
+    padding: 8px 0;
+    overflow-x: auto;
+}
+.pt-line {
+    display: block;
+    width: 100%;
+    text-align: left;
+    white-space: pre;
+    background: none;
+    border: none;
+    color: #f2f2f2;
+    font-size: 14px;
+    padding: 5px 14px;
+    cursor: pointer;
+}
+button.pt-line:hover { background-color: #2f4252; }
+.pt-line-fixed { cursor: default; color: #9fb3c4; }
+.pt-line.is-wrong { background-color: #5a2330; text-decoration: line-through; }
+.pt-line.is-picked { background-color: #7a4a17; outline: 2px solid #F4A261; }
+.pt-fix { margin-top: 12px; }
+
+/* rules box */
+.pt-rules summary { cursor: pointer; font-weight: bold; color: #0077B6; font-size: 16px; }
+.pt-rules li { margin: 8px 0; line-height: 1.5; font-size: 15px; }
+.pt-rules code { background-color: #eef4f8; padding: 1px 4px; border-radius: 4px; }
+
+@media (max-width: 560px) {
+    .pt-modes { flex-direction: column; }
+    .pt-input { width: 11em; }
+    h1 { font-size: 32px; }
+}
