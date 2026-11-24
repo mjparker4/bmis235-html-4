@@ -276,3 +276,169 @@ button.pt-line:hover { background-color: #2f4252; }
     .pt-input { width: 11em; }
     h1 { font-size: 32px; }
 }
+
+/* =====================================================================
+   Home page cards (index.html)
+   ===================================================================== */
+.home-cards {
+    max-width: 900px;
+    margin: 30px auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+}
+.home-card {
+    display: block;
+    text-decoration: none;
+    background-color: #ffffff;
+    border: 2px solid #0077B6;
+    border-radius: 12px;
+    padding: 18px;
+    color: #2b2b2b;
+}
+.home-card:hover, .home-card:focus-visible {
+    border-color: #F4A261;
+    box-shadow: 0 4px 0 #F4A261;
+    outline: none;
+}
+.home-card-title {
+    display: block;
+    font-size: 22px;
+    font-weight: bold;
+    color: #0077B6;
+    margin-bottom: 8px;
+}
+.home-card-text { display: block; font-size: 16px; line-height: 1.5; }
+
+/* =====================================================================
+   Cheat Sheet (cheatsheet.html)
+   ===================================================================== */
+.cs { max-width: 820px; margin: 0 auto; }
+.cs-box {
+    background-color: #ffffff;
+    border: 2px solid #0077B6;
+    border-radius: 12px;
+    padding: 6px 22px 18px 22px;
+    margin: 20px 0;
+}
+.cs-box h2 { color: #0077B6; font-size: 22px; }
+.cs-box li { font-size: 16px; line-height: 1.6; margin: 6px 0; }
+.cs code { font-family: Menlo, Consolas, "Courier New", monospace; background-color: #eef4f8; padding: 1px 4px; border-radius: 4px; }
+.cs-code {
+    font-family: Menlo, Consolas, "Courier New", monospace;
+    background-color: #1e2a35;
+    color: #f2f2f2;
+    border-radius: 8px;
+    padding: 14px;
+    font-size: 14px;
+    line-height: 1.5;
+    overflow-x: auto;
+}
+
+/* =====================================================================
+   Notes Quiz (quiz.html)
+   ===================================================================== */
+.nq { max-width: 820px; margin: 0 auto; }
+.nq-panel {
+    background-color: #ffffff;
+    border: 2px solid #0077B6;
+    border-radius: 12px;
+    padding: 6px 20px 20px 20px;
+    margin: 20px 0;
+}
+.nq-panel h2 { color: #0077B6; font-size: 20px; margin: 16px 0 10px 0; }
+.nq p { max-width: none; margin: 10px 0; }
+.nq-small { font-size: 14px; color: #555555; }
+.nq-upload, .nq-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 12px; }
+.nq-upload input[type="file"] { position: absolute; left: -9999px; }
+.nq-btn {
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 15px;
+    border: 2px solid #0077B6;
+    border-radius: 8px;
+    background-color: #0077B6;
+    color: #ffffff;
+    padding: 8px 14px;
+    cursor: pointer;
+    display: inline-block;
+}
+.nq-btn-light { background-color: #ffffff; color: #0077B6; }
+.nq-btn:hover { border-color: #F4A261; }
+.nq-btn:focus-visible, .nq-option:focus-visible, .nq-upload input:focus-visible + .nq-btn { outline: 3px solid #F4A261; outline-offset: 2px; }
+#nq-file:focus-visible ~ label { outline: 3px solid #F4A261; }
+.nq textarea {
+    width: 100%;
+    box-sizing: border-box;
+    font-family: Menlo, Consolas, "Courier New", monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    padding: 10px;
+    border: 2px solid #c9d9e5;
+    border-radius: 8px;
+    resize: vertical;
+}
+.nq textarea:focus { border-color: #0077B6; outline: none; }
+.nq textarea.is-drop { border-color: #F4A261; background-color: #fff7ee; }
+.nq select { font-family: inherit; font-size: 15px; padding: 6px; border-radius: 6px; }
+.nq-file-msg, .nq-report { font-size: 15px; margin-top: 10px; color: #1b6b32; }
+.nq-file-msg.is-bad, .nq-report.is-bad { color: #a4161a; }
+.nq-tips { margin-top: 16px; }
+.nq-tips summary { cursor: pointer; font-weight: bold; color: #0077B6; }
+.nq-tips li { font-size: 15px; line-height: 1.5; margin: 6px 0; }
+.nq code { font-family: Menlo, Consolas, "Courier New", monospace; background-color: #eef4f8; padding: 1px 4px; border-radius: 4px; }
+
+.nq-top { display: flex; justify-content: space-between; font-size: 14px; color: #555555; margin-top: 14px; }
+.nq-bar { height: 8px; background-color: #e6f2fa; border-radius: 4px; margin: 8px 0 14px 0; overflow: hidden; }
+.nq-bar-fill { height: 100%; width: 0; background-color: #F4A261; transition: width 0.3s; }
+.nq-kind { display: inline-block; font-size: 12px; font-weight: bold; color: #ffffff; background-color: #0077B6; border-radius: 10px; padding: 3px 10px; }
+.nq-prompt { font-size: 19px; font-weight: bold; }
+.nq-quote {
+    font-size: 17px;
+    line-height: 1.5;
+    background-color: #f4f8fb;
+    border-left: 4px solid #F4A261;
+    padding: 10px 14px;
+    border-radius: 0 8px 8px 0;
+}
+.nq-options { display: grid; gap: 8px; margin-top: 12px; }
+.nq-option {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    text-align: left;
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 16px;
+    line-height: 1.4;
+    background-color: #ffffff;
+    border: 2px solid #c9d9e5;
+    border-radius: 10px;
+    padding: 10px 12px;
+    cursor: pointer;
+    color: #2b2b2b;
+}
+.nq-option:hover:not(:disabled) { border-color: #0077B6; background-color: #f4f8fb; }
+.nq-option:disabled { cursor: default; }
+.nq-option.is-right { border-color: #2d9a4b; background-color: #d8f3dc; }
+.nq-option.is-wrong { border-color: #d1495b; background-color: #fde2e1; }
+.nq-letter {
+    flex: none;
+    width: 26px;
+    height: 26px;
+    line-height: 26px;
+    text-align: center;
+    border-radius: 50%;
+    background-color: #0077B6;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 14px;
+}
+.nq-input { font-family: Menlo, Consolas, "Courier New", monospace; font-size: 16px; padding: 8px; border: 2px solid #F4A261; border-radius: 6px; }
+.nq-options:has(.nq-input) { display: flex; gap: 8px; flex-wrap: wrap; }
+.nq-feedback:empty { display: none; }
+.nq-feedback { margin-top: 14px; border-radius: 8px; padding: 2px 14px; }
+.nq-feedback.is-good { background-color: #d8f3dc; }
+.nq-feedback.is-bad { background-color: #fde2e1; }
+.nq-verdict { font-weight: bold; font-size: 16px; }
+.nq-source { font-size: 14px; color: #444444; }
+.nq-source-label { font-weight: bold; }
+.nq-missed-list li { margin: 8px 0; line-height: 1.5; font-size: 15px; }
