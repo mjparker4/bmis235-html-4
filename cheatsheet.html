@@ -26,7 +26,7 @@
 </nav>
 
 <h1>Cheat Sheet</h1>
-<p class="cs-intro">Your notes on one page: every term and key fact, sorted by the headings in your notes. Anything you missed in the <a href="quiz.html">Notes Quiz</a> or marked "Still learning" in the <a href="flashcards.html">Flashcards</a> gets flagged so you know what to review.</p>
+<p class="cs-intro">The Head vs. Body lesson (or your own notes) on one page: every term and key fact, sorted by the headings in your notes. Anything you missed in the <a href="quiz.html">Notes Quiz</a> or marked "Still learning" in the <a href="flashcards.html">Flashcards</a> gets flagged so you know what to review.</p>
 
 <div class="cs">
 
@@ -36,10 +36,10 @@
     <div class="nq-upload">
       <label class="nq-btn" for="cs-file">Upload notes</label>
       <input type="file" id="cs-file" accept=".txt,.md,.html,.htm,.css,.csv,text/plain,text/markdown,text/html" multiple>
-      <button type="button" class="nq-btn nq-btn-light" id="cs-sample">Use sample notes</button>
+      <button type="button" class="nq-btn nq-btn-light" id="cs-sample">Load the Head vs. Body lesson</button>
       <button type="button" class="nq-btn nq-btn-light" id="cs-clear">Clear</button>
     </div>
-    <p class="nq-small">Use headings like <code># Chapter 4</code> to split the cheat sheet into sections. Definitions go one per line, like <code>Asset: something a business owns</code>. For Word, Google Docs, or PDF notes, copy the text and paste it in.</p>
+    <p class="nq-small">Use headings like <code># Chapter 4</code> to split the cheat sheet into sections. Definitions go one per line, like <code>&lt;nav&gt;: the tag that holds the menu</code>. For Word, Google Docs, or PDF notes, copy the text and paste it in.</p>
     <textarea id="cs-notes" rows="10" spellcheck="false" placeholder="Paste your notes here, or upload a file. The cheat sheet updates as you type."></textarea>
     <div class="nq-file-msg" id="cs-file-msg" aria-live="polite"></div>
   </details>
@@ -61,7 +61,7 @@
   <div class="cs-empty nq-panel" id="cs-empty" hidden>
     <h2>No notes yet</h2>
     <p>Add notes above, or on the <a href="quiz.html">Notes Quiz</a> or <a href="flashcards.html">Flashcards</a> page, and your cheat sheet shows up here.</p>
-    <button type="button" class="nq-btn" id="cs-sample2">Try it with the sample notes</button>
+    <button type="button" class="nq-btn" id="cs-sample2">Load the Head vs. Body lesson</button>
   </div>
 
   <div class="cs-footer-row" id="cs-footer-row" hidden>
@@ -174,7 +174,7 @@
   function useSample() {
     ta.value = Notes.SAMPLE; Notes.save(ta.value); build();
     $("cs-file-msg").className = "nq-file-msg";
-    $("cs-file-msg").textContent = "Loaded the sample notes (accounting basics). Edit them or add your own.";
+    $("cs-file-msg").textContent = "Loaded the Head vs. Body lesson. Add your own notes below it, or clear it and use only yours.";
   }
 
   $("cs-file").addEventListener("change", function () { upload(this.files); this.value = ""; });

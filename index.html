@@ -3,14 +3,14 @@
   Author: Matthew Parker
   GU username: mparker13
   Course: BMIS 235 - HTML-4
-  Page: Home page for the study tools
+  Page: Home page, introduces head vs. body
 -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="author" content="Matthew Parker">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Study Tools</title>
+<title>Head vs. Body</title>
 
 <!-- this one line connects the page to the stylesheet -->
 <link rel="stylesheet" href="styles.css">
@@ -25,25 +25,44 @@
     <a href="cheatsheet.html"><img src="img/cheatsheet.png" alt="Cheat Sheet"></a>
 </nav>
 
-<h1>Study Tools</h1>
-<p>I learn best by testing myself and finding out right away what I got wrong, not by rereading my notes. So I built a few tools that do that for me. Add your notes once and use them for the quiz, the flashcards, and the cheat sheet.</p>
+<h1>Head vs. Body</h1>
+<p>Every web page has two parts. The <strong>head</strong> holds information <em>about</em> the page that visitors don't see on the page itself, like the title in the browser tab and the link to the stylesheet. The <strong>body</strong> holds everything visitors <em>do</em> see: headings, paragraphs, images, links, the menu, and the footer.</p>
+
+<div class="home-example">
+<pre><span class="hx-c">&lt;!DOCTYPE html&gt;</span>             <span class="hx-note">always the first line</span>
+&lt;html lang="en"&gt;
+<span class="hx-head">&lt;head&gt;</span>                      <span class="hx-note">information about the page (not shown on it)</span>
+<span class="hx-head">  &lt;meta charset="utf-8"&gt;</span>
+<span class="hx-head">  &lt;title&gt;My Page&lt;/title&gt;</span>    <span class="hx-note">shows in the browser tab</span>
+<span class="hx-head">  &lt;link rel="stylesheet" href="styles.css"&gt;</span>
+<span class="hx-head">&lt;/head&gt;</span>
+<span class="hx-body">&lt;body&gt;</span>                      <span class="hx-note">everything visitors see</span>
+<span class="hx-body">  &lt;nav&gt;...&lt;/nav&gt;</span>
+<span class="hx-body">  &lt;h1&gt;Welcome&lt;/h1&gt;</span>
+<span class="hx-body">  &lt;p&gt;A paragraph.&lt;/p&gt;</span>
+<span class="hx-body">  &lt;footer&gt;...&lt;/footer&gt;</span>
+<span class="hx-body">&lt;/body&gt;</span>
+&lt;/html&gt;</pre>
+</div>
+
+<p>I learn best by testing myself and finding out right away what I got wrong, not by rereading notes. So this site teaches head vs. body with three tools that all come loaded with the lesson:</p>
 
 <div class="home-cards">
     <a class="home-card" href="quiz.html">
         <span class="home-card-title">Notes Quiz</span>
-        <span class="home-card-text">Upload or paste your notes from any class and get a multiple-choice and fill-in-the-blank quiz. Every answer shows the line from your notes it came from.</span>
+        <span class="home-card-text">Fill-in-the-blank and "which term is it?" questions on head vs. body. Every answer shows the line from the lesson it came from.</span>
     </a>
     <a class="home-card" href="flashcards.html">
         <span class="home-card-title">Flashcards</span>
-        <span class="home-card-text">Every definition in your notes becomes a card. Flip it, sort it into "Got it" or "Still learning," and keep going until you know them all.</span>
+        <span class="home-card-text">Flip through the head and body terms, sort each one into "Got it" or "Still learning," and keep going until you know them all.</span>
     </a>
     <a class="home-card" href="cheatsheet.html">
         <span class="home-card-title">Cheat Sheet</span>
-        <span class="home-card-text">Your notes on one printable page, sorted by section, with everything you missed in the quiz or flashcards flagged to review.</span>
+        <span class="home-card-text">The whole lesson on one printable page, with anything you missed in the quiz or flashcards flagged to review.</span>
     </a>
 </div>
 
-<p>No notes handy? Each tool has sample notes on accounting basics you can try them with. Your notes stay in your browser and aren't sent anywhere.</p>
+<p>Studying for a different class? Every tool lets you swap in your own notes. They stay in your browser and aren't sent anywhere.</p>
 
 <footer>Built by Matthew Parker &middot; BMIS 235 &middot; Study tools built with Claude (AI)</footer>
 

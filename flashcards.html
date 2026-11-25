@@ -26,7 +26,7 @@
 </nav>
 
 <h1>Flashcards</h1>
-<p>Every definition in your notes becomes a card. Flip it, then sort it: "Got it" or "Still learning." The cards you're still learning come back until you know them all. These use the same notes as the <a href="quiz.html">Notes Quiz</a>, so whatever you added there is already here.</p>
+<p>The Head vs. Body lesson comes loaded, or you can use your own notes. Every definition becomes a card. Flip it, then sort it: "Got it" or "Still learning." The cards you're still learning come back until you know them all. These use the same notes as the <a href="quiz.html">Notes Quiz</a>, so whatever you added there is already here.</p>
 
 <div class="fc">
 
@@ -36,14 +36,14 @@
     <div class="nq-upload">
       <label class="nq-btn" for="fc-file">Upload notes</label>
       <input type="file" id="fc-file" accept=".txt,.md,.html,.htm,.css,.csv,text/plain,text/markdown,text/html" multiple>
-      <button type="button" class="nq-btn nq-btn-light" id="fc-sample">Use sample notes</button>
+      <button type="button" class="nq-btn nq-btn-light" id="fc-sample">Load the Head vs. Body lesson</button>
       <button type="button" class="nq-btn nq-btn-light" id="fc-clear">Clear</button>
     </div>
-    <p class="nq-small">Cards come from definitions, one per line, like <code>Asset: something a business owns that will bring it future benefit</code> or <code>Revenue is the money a business earns</code>. For Word, Google Docs, or PDF notes, copy the text and paste it in.</p>
+    <p class="nq-small">Cards come from definitions, one per line, like <code>&lt;title&gt;: the text that shows in the browser tab</code> or <code>A stylesheet is a separate CSS file</code>. For Word, Google Docs, or PDF notes, copy the text and paste it in.</p>
     <textarea id="fc-notes" rows="10" spellcheck="false" placeholder="Paste your notes here, or upload a file.
 
-Asset: something a business owns that will bring it future benefit
-Liability: an amount a business owes to someone else"></textarea>
+Head: the part of a page that holds information about the page
+<nav>: the tag that holds a page's menu of links"></textarea>
     <div class="nq-file-msg" id="fc-file-msg" aria-live="polite"></div>
     <div class="nq-row">
       <label for="fc-front">Front of the card:</label>
@@ -127,7 +127,7 @@ Liability: an amount a business owes to someone else"></textarea>
     var report = $("fc-report");
     report.className = "nq-report";
     var text = ta.value;
-    if (!text.trim()) { report.textContent = "Add some notes first: paste them in, upload a file, or try the sample notes."; report.classList.add("is-bad"); return; }
+    if (!text.trim()) { report.textContent = "Add some notes first: paste them in, upload a file, or load the Head vs. Body lesson."; report.classList.add("is-bad"); return; }
     Notes.save(text);
     var defs = Notes.parse(text).defs;
     if (!defs.length) {
@@ -232,7 +232,7 @@ Liability: an amount a business owes to someone else"></textarea>
   ta.addEventListener("dragleave", function () { ta.classList.remove("is-drop"); });
   ta.addEventListener("drop", function (e) { if (e.dataTransfer && e.dataTransfer.files.length) { e.preventDefault(); ta.classList.remove("is-drop"); upload(e.dataTransfer.files); } });
   ta.addEventListener("input", function () { Notes.save(ta.value); });
-  $("fc-sample").addEventListener("click", function () { ta.value = Notes.SAMPLE; Notes.save(ta.value); $("fc-file-msg").className = "nq-file-msg"; $("fc-file-msg").textContent = "Loaded the sample notes (accounting basics). Edit them or add your own."; });
+  $("fc-sample").addEventListener("click", function () { ta.value = Notes.SAMPLE; Notes.save(ta.value); $("fc-file-msg").className = "nq-file-msg"; $("fc-file-msg").textContent = "Loaded the Head vs. Body lesson. Add your own notes below it, or clear it and use only yours."; });
   $("fc-clear").addEventListener("click", function () { ta.value = ""; Notes.save(""); $("fc-report").textContent = ""; $("fc-file-msg").textContent = ""; ta.focus(); });
   $("fc-make").addEventListener("click", make);
 
