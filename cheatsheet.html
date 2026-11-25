@@ -3,7 +3,7 @@
   Author: Matthew Parker
   GU username: mparker13
   Course: BMIS 235 - HTML-4
-  Page: Cheat Sheet for HTML-1 to HTML-3
+  Page: Cheat Sheet, a one-page summary built from your notes
 -->
 <html lang="en">
 <head>
@@ -26,77 +26,181 @@
 </nav>
 
 <h1>Cheat Sheet</h1>
-<p>The main rules from HTML-1 to HTML-3. To study it, copy this page into the <a href="quiz.html">Notes Quiz</a> or <a href="flashcards.html">Flashcards</a>.</p>
+<p class="cs-intro">Your notes on one page: every term and key fact, sorted by the headings in your notes. Anything you missed in the <a href="quiz.html">Notes Quiz</a> or marked "Still learning" in the <a href="flashcards.html">Flashcards</a> gets flagged so you know what to review.</p>
 
 <div class="cs">
 
-<section class="cs-box">
-    <h2>HTML-1 &middot; Tags and page structure</h2>
-    <ul>
-        <li>A <strong>tag</strong> is a label in angle brackets, like <code>&lt;p&gt;</code>. Most come in pairs: an opening tag and a closing tag with a slash, like <code>&lt;p&gt;...&lt;/p&gt;</code>.</li>
-        <li>An <strong>element</strong> is the opening tag, its content, and the closing tag together.</li>
-        <li>An <strong>attribute</strong> adds information inside an opening tag, like <code>href="quiz.html"</code>.</li>
-        <li><code>&lt;!DOCTYPE html&gt;</code> goes on the very first line.</li>
-        <li>The <code>&lt;head&gt;</code> holds information about the page that visitors don't see on the page itself: the <code>&lt;title&gt;</code> (shown in the browser tab), <code>&lt;meta&gt;</code> tags, and the link to the stylesheet.</li>
-        <li>The <code>&lt;body&gt;</code> holds everything visitors see: headings, paragraphs, images, links.</li>
-        <li><code>&lt;h1&gt;</code> is the main heading. <code>&lt;p&gt;</code> is a paragraph.</li>
-        <li>A comment, <code>&lt;!-- like this --&gt;</code>, is a note in the code that the browser doesn't show.</li>
-    </ul>
-<pre class="cs-code">&lt;!DOCTYPE html&gt;
-&lt;html lang="en"&gt;
-&lt;head&gt;
-  &lt;meta charset="utf-8"&gt;
-  &lt;meta name="author" content="Matthew Parker"&gt;
-  &lt;title&gt;Shows in the tab&lt;/title&gt;
-  &lt;link rel="stylesheet" href="styles.css"&gt;
-&lt;/head&gt;
-&lt;body&gt;
-  &lt;h1&gt;Shows on the page&lt;/h1&gt;
-  &lt;p&gt;So does this.&lt;/p&gt;
-&lt;/body&gt;
-&lt;/html&gt;</pre>
-</section>
+  <!-- ===== NOTES ===== -->
+  <details class="nq-panel cs-notes" id="cs-notes-box">
+    <summary>Your notes <span class="cs-notes-hint">(the same notes as the quiz and flashcards)</span></summary>
+    <div class="nq-upload">
+      <label class="nq-btn" for="cs-file">Upload notes</label>
+      <input type="file" id="cs-file" accept=".txt,.md,.html,.htm,.css,.csv,text/plain,text/markdown,text/html" multiple>
+      <button type="button" class="nq-btn nq-btn-light" id="cs-sample">Use sample notes</button>
+      <button type="button" class="nq-btn nq-btn-light" id="cs-clear">Clear</button>
+    </div>
+    <p class="nq-small">Use headings like <code># Chapter 4</code> to split the cheat sheet into sections. Definitions go one per line, like <code>Asset: something a business owns</code>. For Word, Google Docs, or PDF notes, copy the text and paste it in.</p>
+    <textarea id="cs-notes" rows="10" spellcheck="false" placeholder="Paste your notes here, or upload a file. The cheat sheet updates as you type."></textarea>
+    <div class="nq-file-msg" id="cs-file-msg" aria-live="polite"></div>
+  </details>
 
-<section class="cs-box">
-    <h2>HTML-2 &middot; Links, images, and paths</h2>
-    <ul>
-        <li><code>&lt;a href="..."&gt;</code> makes a link. The <code>href</code> says where it goes.</li>
-        <li><code>&lt;img src="..." alt="..."&gt;</code> shows an image. The <code>src</code> says where the file is. The <code>alt</code> text describes the image for screen readers and shows up if the image can't load. <code>&lt;img&gt;</code> has no closing tag.</li>
-        <li>A <strong>relative path</strong> starts from the folder of the page you're editing:
-            <ul>
-                <li>Same folder: just the file name, <code>quiz.html</code></li>
-                <li>Into a folder: folder, slash, file, <code>img/home.png</code></li>
-                <li>Up a folder: <code>../</code> first, <code>../styles.css</code></li>
-            </ul>
-        </li>
-        <li>An <strong>absolute URL</strong> is a full web address, like <code>https://www.gonzaga.edu</code>. Use it for other people's sites.</li>
-        <li>Capital letters count on live web servers: <code>Home.png</code> and <code>home.png</code> are different files.</li>
-        <li>Use forward slashes <code>/</code>, don't start a path with <code>/</code>, and match the file extension exactly (<code>.html</code> isn't <code>.htm</code>).</li>
-    </ul>
-<pre class="cs-code">&lt;a href="quiz.html"&gt;Notes Quiz&lt;/a&gt;
-&lt;img src="img/home.png" alt="Home"&gt;
-&lt;a href="https://www.gonzaga.edu"&gt;Gonzaga&lt;/a&gt;</pre>
-</section>
+  <!-- ===== TOOLS ===== -->
+  <div class="cs-tools" id="cs-tools">
+    <label class="cs-search">
+      <span class="cs-hidden-label">Search</span>
+      <input type="search" id="cs-search" placeholder="Search your cheat sheet" autocomplete="off">
+    </label>
+    <label class="cs-check"><input type="checkbox" id="cs-only-missed"> Only what I need to review</label>
+    <button type="button" class="nq-btn nq-btn-light" id="cs-print">Print</button>
+  </div>
+  <div class="cs-summary" id="cs-summary" aria-live="polite"></div>
 
-<section class="cs-box">
-    <h2>HTML-3 &middot; CSS and the stylesheet</h2>
-    <ul>
-        <li><strong>CSS</strong> controls how a page looks: colors, fonts, sizes, spacing.</li>
-        <li>A <strong>stylesheet</strong> is a separate <code>.css</code> file. Every page that links to it with <code>&lt;link rel="stylesheet" href="styles.css"&gt;</code> in its <code>&lt;head&gt;</code> gets the same styles, so changing one rule changes the whole site.</li>
-        <li>A CSS rule has a <strong>selector</strong> (what to style), then <strong>properties</strong> and <strong>values</strong> inside curly braces. Each line ends with a semicolon.</li>
-        <li>A <strong>class</strong> selector starts with a period, like <code>.cs-box</code>. It's more specific than a tag selector like <code>p</code>.</li>
-        <li><strong>The cascade</strong> decides which rule wins when two rules style the same thing: the more specific selector wins, and if they're equally specific, the one that comes later wins.</li>
-        <li>A <strong>hex color</strong> is <code>#</code> plus six digits or letters, like <code>#0077B6</code>.</li>
-    </ul>
-<pre class="cs-code">h1 {
-    color: #0077B6;
-    font-size: 40px;
-}</pre>
-</section>
+  <!-- the cheat sheet itself gets built here -->
+  <div id="cs-sheet"></div>
+
+  <div class="cs-empty nq-panel" id="cs-empty" hidden>
+    <h2>No notes yet</h2>
+    <p>Add notes above, or on the <a href="quiz.html">Notes Quiz</a> or <a href="flashcards.html">Flashcards</a> page, and your cheat sheet shows up here.</p>
+    <button type="button" class="nq-btn" id="cs-sample2">Try it with the sample notes</button>
+  </div>
+
+  <div class="cs-footer-row" id="cs-footer-row" hidden>
+    <button type="button" class="nq-btn nq-btn-light" id="cs-clear-flags">Clear the review flags</button>
+  </div>
 
 </div>
 
 <footer>Built by Matthew Parker &middot; BMIS 235 &middot; Study tools built with Claude (AI)</footer>
+
+<script src="notes.js"></script>
+<script>
+(function () {
+  function $(id) { return document.getElementById(id); }
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; }
+  function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+  var ta = $("cs-notes"), sheet = $("cs-sheet");
+  var sections = [];
+
+  // ---------- build the cheat sheet from the notes ----------
+  function build() {
+    sections = Notes.sections(ta.value);
+    draw();
+  }
+
+  function draw() {
+    var missed = Notes.missed();
+    var query = $("cs-search").value.trim().toLowerCase();
+    var onlyMissed = $("cs-only-missed").checked;
+    var isMissed = function (key) { return missed.indexOf(Notes.norm(key)) !== -1; };
+    var matches = function (text) { return !query || text.toLowerCase().indexOf(query) !== -1; };
+
+    sheet.innerHTML = "";
+    var empty = !sections.length;
+    $("cs-empty").hidden = !empty;
+    $("cs-tools").hidden = empty;
+    if (empty) { $("cs-summary").textContent = ""; $("cs-footer-row").hidden = true; return; }
+
+    var totalTerms = 0, totalFacts = 0, flagged = 0, shown = 0;
+    sections.forEach(function (sec) {
+      totalTerms += sec.defs.length; totalFacts += sec.facts.length;
+      sec.defs.forEach(function (d) { if (isMissed(d.term)) flagged++; });
+      sec.facts.forEach(function (f) { if (isMissed(f)) flagged++; });
+    });
+
+    sections.forEach(function (sec, i) {
+      var defs = sec.defs.filter(function (d) { return matches(d.term + " " + d.def) && (!onlyMissed || isMissed(d.term)); });
+      var facts = sec.facts.filter(function (f) { return matches(f) && (!onlyMissed || isMissed(f)); });
+      if (!defs.length && !facts.length) return;
+      shown += defs.length + facts.length;
+
+      var box = el("section", "cs-section");
+      box.appendChild(el("h2", "", sec.heading || (sections.length > 1 ? "Section " + (i + 1) : "Your notes")));
+
+      if (defs.length) {
+        box.appendChild(el("h3", "", "Terms"));
+        var dl = el("dl", "cs-terms");
+        defs.forEach(function (d) {
+          var item = el("div", "cs-term" + (isMissed(d.term) ? " is-missed" : ""));
+          var dt = el("dt", "", d.term);
+          if (isMissed(d.term)) dt.appendChild(el("span", "cs-flag", "Review"));
+          item.appendChild(dt);
+          item.appendChild(el("dd", "", cap(d.def.replace(/\s+/g, " "))));
+          dl.appendChild(item);
+        });
+        box.appendChild(dl);
+      }
+
+      if (facts.length) {
+        box.appendChild(el("h3", "", "Key facts"));
+        var ul = el("ul", "cs-facts");
+        facts.forEach(function (f) {
+          var li = el("li", isMissed(f) ? "is-missed" : "", f);
+          if (isMissed(f)) li.appendChild(el("span", "cs-flag", "Review"));
+          ul.appendChild(li);
+        });
+        box.appendChild(ul);
+      }
+      sheet.appendChild(box);
+    });
+
+    var parts = [totalTerms + " term" + (totalTerms === 1 ? "" : "s"), totalFacts + " key fact" + (totalFacts === 1 ? "" : "s")];
+    var summary = parts.join(" and ") + " from your notes";
+    summary += flagged ? ". " + flagged + " flagged to review." : ". Nothing flagged yet: take the quiz or go through the flashcards and your misses show up here.";
+    if ((query || onlyMissed) && !shown) summary += " Nothing matches right now.";
+    $("cs-summary").textContent = summary;
+    $("cs-only-missed").disabled = !flagged;
+    if (!flagged) $("cs-only-missed").checked = false;
+    $("cs-footer-row").hidden = !flagged;
+  }
+
+  // ---------- notes box ----------
+  function upload(files) {
+    var msg = $("cs-file-msg");
+    msg.className = "nq-file-msg";
+    Notes.readFiles(files, function (texts, skipped) {
+      if (texts.length) {
+        ta.value = (ta.value.trim() ? ta.value.trim() + "\n\n" : "") + texts.join("\n\n");
+        Notes.save(ta.value);
+        build();
+      }
+      var parts = [];
+      if (texts.length) parts.push("Added " + texts.length + " file" + (texts.length === 1 ? "" : "s") + ".");
+      if (skipped.length) parts.push("Couldn't read " + skipped.join(", ") + ". For Word, Google Docs, or PDF, copy the text and paste it in.");
+      msg.textContent = parts.join(" ");
+      if (skipped.length) msg.classList.add("is-bad");
+    });
+  }
+  function useSample() {
+    ta.value = Notes.SAMPLE; Notes.save(ta.value); build();
+    $("cs-file-msg").className = "nq-file-msg";
+    $("cs-file-msg").textContent = "Loaded the sample notes (accounting basics). Edit them or add your own.";
+  }
+
+  $("cs-file").addEventListener("change", function () { upload(this.files); this.value = ""; });
+  ta.addEventListener("dragover", function (e) { e.preventDefault(); ta.classList.add("is-drop"); });
+  ta.addEventListener("dragleave", function () { ta.classList.remove("is-drop"); });
+  ta.addEventListener("drop", function (e) { if (e.dataTransfer && e.dataTransfer.files.length) { e.preventDefault(); ta.classList.remove("is-drop"); upload(e.dataTransfer.files); } });
+  ta.addEventListener("input", function () { Notes.save(ta.value); build(); });
+  $("cs-sample").addEventListener("click", useSample);
+  $("cs-sample2").addEventListener("click", function () { $("cs-notes-box").open = true; useSample(); });
+  $("cs-clear").addEventListener("click", function () { ta.value = ""; Notes.save(""); $("cs-file-msg").textContent = ""; build(); ta.focus(); });
+
+  // ---------- search, filter, print ----------
+  $("cs-search").addEventListener("input", draw);
+  $("cs-only-missed").addEventListener("change", draw);
+  $("cs-print").addEventListener("click", function () { window.print(); });
+  $("cs-clear-flags").addEventListener("click", function () { Notes.clearAllMissed(); draw(); });
+
+  // notes or flags may have changed on another page or tab
+  window.addEventListener("pageshow", function (e) { if (e.persisted) { ta.value = Notes.saved(); build(); } });
+  window.addEventListener("storage", function () { ta.value = Notes.saved(); build(); });
+
+  ta.value = Notes.saved();
+  if (!ta.value.trim()) $("cs-notes-box").open = true;
+  build();
+})();
+</script>
 
 </body>
 </html>
