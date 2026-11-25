@@ -26,7 +26,7 @@
 </nav>
 
 <h1>Notes Quiz</h1>
-<p>Upload or paste your notes from any class and this page turns them into a quiz. Everything happens in your browser: your notes aren't sent anywhere, and no AI writes the questions. It builds them from the definitions and sentences in your notes.</p>
+<p>This quiz comes loaded with the Head vs. Body lesson, so you can start right away. You can also upload or paste your own notes from any class. Everything happens in your browser: your notes aren't sent anywhere, and no AI writes the questions.</p>
 
 <div class="nq">
 
@@ -36,16 +36,16 @@
     <div class="nq-upload">
       <label class="nq-btn" for="nq-file">Upload notes</label>
       <input type="file" id="nq-file" accept=".txt,.md,.html,.htm,.css,.csv,text/plain,text/markdown,text/html" multiple>
-      <button type="button" class="nq-btn nq-btn-light" id="nq-sample">Use sample notes</button>
+      <button type="button" class="nq-btn nq-btn-light" id="nq-sample">Load the Head vs. Body lesson</button>
       <button type="button" class="nq-btn nq-btn-light" id="nq-clear">Clear</button>
     </div>
     <p class="nq-small">Upload .txt, .md, or .html files, or drag them onto the box. For Word, Google Docs, or PDF notes, copy the text and paste it in.</p>
     <textarea id="nq-notes" rows="12" spellcheck="false" placeholder="Paste your notes here, or upload a file.
 
 Notes like these make the best questions:
-Asset: something a business owns that will bring it future value
-Revenue is the money a business earns from selling goods or services.
-The balance sheet shows assets, liabilities, and equity on one date."></textarea>
+Body: the part of a page that holds everything visitors see
+The text in the <title> shows up in the browser tab.
+The stylesheet link belongs in the head."></textarea>
     <div class="nq-file-msg" id="nq-file-msg" aria-live="polite"></div>
 
     <h2>2 &middot; Make the quiz</h2>
@@ -65,7 +65,8 @@ The balance sheet shows assets, liabilities, and equity on one date."></textarea
       <summary>How to write notes that make good questions</summary>
       <ul>
         <li><strong>Definitions on their own line</strong> work best: <code>Term: what it means</code> or <code>Term - what it means</code>. Each one becomes a "which term is this?" or "which one describes this term?" question.</li>
-        <li>Sentences like <code>Equity is ...</code> or <code>Depreciation means ...</code> count as definitions too.</li>
+        <li>Sentences like <code>A stylesheet is ...</code> or <code>../ means ...</code> count as definitions too.</li>
+        <li>Want to pick the blank and the wrong answers yourself? Write them like <code>The &lt;title&gt; belongs in the {{head|body|footer|nav}}.</code> The first one is the right answer. That's how the Head vs. Body lesson is written, so every question has exactly one right answer.</li>
         <li><strong>Full sentences</strong> become fill-in-the-blank questions. A term you defined somewhere else in your notes, or a number, is usually what gets blanked out.</li>
         <li>Headings (<code># Chapter 4</code>) and bullet points are fine. Very short fragments get skipped.</li>
         <li>You need at least 4 definitions or a handful of full sentences for multiple choice to work well.</li>
@@ -252,11 +253,21 @@ The balance sheet shows assets, liabilities, and equity on one date."></textarea
       return m ? m[1] : null;
     }
     var usedAnswers = {};
+    var handWritten = {};
+    (notes.blanks || []).forEach(function (b) {
+      handWritten[b.sentence] = true;
+      qs.push({ kind: "Fill in the blank", key: b.sentence, prompt: "Fill in the blank:", quote: b.quote, answer: b.answer, options: [b.answer].concat(b.wrong), source: b.sentence });
+    });
     notes.sentences.forEach(function (s) {
+      if (handWritten[s]) return;
       var toks = keyTokens(s, terms).filter(function (t) { return (usedAnswers[norm(t)] || 0) < 2; });
       if (!toks.length) return;
       var ans = toks[Math.floor(Math.random() * Math.min(toks.length, 2))];
       var at = s.indexOf(ans);
+      if (/^[A-Za-z]/.test(ans)) {
+        var wm = new RegExp("(^|[^A-Za-z])" + escapeRe(ans) + "(?![A-Za-z])").exec(s);
+        at = wm ? wm.index + wm[1].length : -1;
+      }
       if (at === -1) return;
       var blanked = s.slice(0, at) + "_____" + s.slice(at + ans.length);
       var shown = ans.replace(/^`|`$/g, "");
@@ -276,8 +287,9 @@ The balance sheet shows assets, liabilities, and equity on one date."></textarea
       } else if (kind === "word") {
         wrong = wordDistractors(ans, pool.word, s);
       } else {
+        var tagOf = function (x) { var t = x.match(/^<\/?!?([a-z0-9]+)/i); return t ? t[1].toLowerCase() : null; };
         wrong = shuffle(pool[kind]).filter(function (x) {
-          return norm(x) !== norm(ans) && lowerS.indexOf(x.toLowerCase()) === -1;
+          return norm(x) !== norm(ans) && lowerS.indexOf(x.toLowerCase()) === -1 && (tagOf(x) === null || tagOf(x) !== tagOf(ans));
         }).slice(0, 3).map(function (x) { return x.replace(/^`|`$/g, ""); });
       }
       usedAnswers[norm(ans)] = (usedAnswers[norm(ans)] || 0) + 1;
@@ -411,7 +423,7 @@ The balance sheet shows assets, liabilities, and equity on one date."></textarea
     var text = $("nq-notes").value;
     var report = $("nq-report");
     report.className = "nq-report";
-    if (!text.trim()) { report.textContent = "Add some notes first: paste them in, upload a file, or try the sample notes."; report.classList.add("is-bad"); return; }
+    if (!text.trim()) { report.textContent = "Add some notes first: paste them in, upload a file, or load the Head vs. Body lesson."; report.classList.add("is-bad"); return; }
     Notes.save(text);
     lastNotes = text;
     var notes = parseNotes(text);
@@ -455,7 +467,7 @@ The balance sheet shows assets, liabilities, and equity on one date."></textarea
   ta.addEventListener("drop", function (e) { if (e.dataTransfer && e.dataTransfer.files.length) { e.preventDefault(); ta.classList.remove("is-drop"); readFiles(e.dataTransfer.files); } });
   ta.addEventListener("input", function () { Notes.save(ta.value); });
 
-  $("nq-sample").addEventListener("click", function () { ta.value = SAMPLE; Notes.save(SAMPLE); $("nq-file-msg").textContent = "Loaded the sample notes (accounting basics). Edit them or add your own."; });
+  $("nq-sample").addEventListener("click", function () { ta.value = SAMPLE; Notes.save(SAMPLE); $("nq-file-msg").textContent = "Loaded the Head vs. Body lesson. Add your own notes below it, or clear it and use only yours."; });
   $("nq-clear").addEventListener("click", function () { ta.value = ""; Notes.save(""); $("nq-report").textContent = ""; $("nq-file-msg").textContent = ""; ta.focus(); });
   $("nq-make").addEventListener("click", makeQuiz);
   $("nq-next").addEventListener("click", next);
