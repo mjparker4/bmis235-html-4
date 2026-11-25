@@ -20,13 +20,11 @@
 <!-- ===== MENU ===== same menu on every page ===== -->
 <nav>
     <a href="index.html"><img src="img/home.png" alt="Home"></a>
-    <a href="selectors.html"><img src="img/selectors.png" alt="Selector Lab"></a>
     <a href="quiz.html"><img src="img/quiz.png" alt="Notes Quiz"></a>
-    <a href="cheatsheet.html"><img src="img/cheatsheet.png" alt="Cheat Sheet"></a>
 </nav>
 
 <h1>Notes Quiz</h1>
-<p>Upload or paste your class notes and this page turns them into a quiz. Everything happens in your browser: your notes aren't sent anywhere, and no AI writes the questions. It builds them from the definitions and sentences in your notes.</p>
+<p>Upload or paste your notes from any class and this page turns them into a quiz. Everything happens in your browser: your notes aren't sent anywhere, and no AI writes the questions. It builds them from the definitions and sentences in your notes.</p>
 
 <div class="nq">
 
@@ -43,9 +41,9 @@
     <textarea id="nq-notes" rows="12" spellcheck="false" placeholder="Paste your notes here, or upload a file.
 
 Notes like these make the best questions:
-Selector: the part of a CSS rule that picks which elements to style
-The <head> holds information about the page, like the <title>.
-alt text shows up when an image can't load."></textarea>
+Asset: something a business owns that will bring it future value
+Revenue is the money a business earns from selling goods or services.
+The balance sheet shows assets, liabilities, and equity on one date."></textarea>
     <div class="nq-file-msg" id="nq-file-msg" aria-live="polite"></div>
 
     <h2>2 &middot; Make the quiz</h2>
@@ -64,10 +62,10 @@ alt text shows up when an image can't load."></textarea>
     <details class="nq-tips">
       <summary>How to write notes that make good questions</summary>
       <ul>
-        <li><strong>Definitions on their own line</strong> work best: <code>Term: what it means</code> or <code>Term - what it means</code>. Each one becomes a "which term is this?" or "which describes this term?" question.</li>
-        <li>Sentences like <code>The cascade is ...</code> or <code>../ means ...</code> count as definitions too.</li>
-        <li><strong>Full sentences</strong> become fill-in-the-blank questions. Put code in the sentence (like <code>&lt;title&gt;</code> or <code>styles.css</code>) and that's usually what gets blanked out.</li>
-        <li>Headings (<code># HTML-2</code>) and bullet points are fine. Very short fragments get skipped.</li>
+        <li><strong>Definitions on their own line</strong> work best: <code>Term: what it means</code> or <code>Term - what it means</code>. Each one becomes a "which term is this?" or "which one describes this term?" question.</li>
+        <li>Sentences like <code>Equity is ...</code> or <code>Depreciation means ...</code> count as definitions too.</li>
+        <li><strong>Full sentences</strong> become fill-in-the-blank questions. A term you defined somewhere else in your notes, or a number, is usually what gets blanked out.</li>
+        <li>Headings (<code># Chapter 4</code>) and bullet points are fine. Very short fragments get skipped.</li>
         <li>You need at least 4 definitions or a handful of full sentences for multiple choice to work well.</li>
       </ul>
     </details>
@@ -103,7 +101,7 @@ alt text shows up when an image can't load."></textarea>
 
 </div>
 
-<footer>Built by Matthew Parker &middot; BMIS 235 &middot; Study tools built with Claude (AI)</footer>
+<footer>Built by Matthew Parker &middot; BMIS 235 &middot; Notes Quiz built with Claude (AI)</footer>
 
 <!-- JavaScript: reads the notes, finds definitions and sentences, builds the questions, and runs the quiz.
      Nothing is sent to a server. Notes are saved in this browser only, so they're still here next visit. -->
@@ -243,15 +241,20 @@ alt text shows up when an image can't load."></textarea>
     words.sort(function (a, b) { return b.length - a.length; });
     return words;
   }
+  // a term or its plural, as a regex piece: liability or liabilities
+  function escapeRe(x) { return x.replace(/[.*+?^${}()|[\]\\\/]/g, "\\$&"); }
+  function forms(t) { return "(?:" + escapeRe(pluralize(t)) + "|" + escapeRe(t) + "s?)"; }
+  function isPluralOf(ans, t) { return norm(pluralize(t)) === norm(ans) || norm(t + "s") === norm(ans); }
+
   // terms from the notes' own definitions that show up in a sentence
   function termHits(s, terms) {
     return terms.filter(function (t) {
       if (t.length < 3) return false;
-      var re = new RegExp("(^|[^A-Za-z])" + t.replace(/[.*+?^${}()|[\]\\\/]/g, "\\$&") + "s?(?![A-Za-z])", "i");
+      var re = new RegExp("(^|[^A-Za-z])" + forms(t) + "(?![A-Za-z])", "i");
       return re.test(s);
     }).map(function (t) {
-      var m = s.match(new RegExp(t.replace(/[.*+?^${}()|[\]\\\/]/g, "\\$&"), "i"));
-      return m ? m[0] : t;
+      var m = s.match(new RegExp("(?:^|[^A-Za-z])(" + forms(t) + ")(?![A-Za-z])", "i"));
+      return m ? m[1] : t;
     });
   }
   function keyTokens(s, terms) {
@@ -274,7 +277,16 @@ alt text shows up when an image can't load."></textarea>
     scored.sort(function (a, b) { return b.sc - a.sc; });
     return scored.slice(0, 3).map(function (x) { return x.w; });
   }
-  function matchCase(word, like) { if (word === word.toUpperCase()) return word; return like.charAt(0) === like.charAt(0).toLowerCase() ? word.toLowerCase() : cap(word); }
+  function matchCase(word, like) {
+    if (word === word.toUpperCase()) return word;                       // keep acronyms like CSS
+    var likeIsAcronym = like === like.toUpperCase();
+    return likeIsAcronym || like.charAt(0) === like.charAt(0).toLowerCase() ? word.toLowerCase() : cap(word);
+  }
+  function pluralize(w) {
+    if (/[^aeiou]y$/i.test(w)) return w.slice(0, -1) + "ies";
+    if (/(s|x|z|ch|sh)$/i.test(w)) return w + "es";
+    return w + "s";
+  }
 
   // ---------- building questions ----------
   function buildQuestions(notes) {
@@ -326,10 +338,14 @@ alt text shows up when an image can't load."></textarea>
       var kind = kindOf(ans);
       var lowerS = s.toLowerCase();
       var wrong;
-      var isTerm = terms.some(function (t) { return norm(t) === norm(ans) || norm(t + "s") === norm(ans); });
+      var isTerm = terms.some(function (t) { return norm(t) === norm(ans) || isPluralOf(ans, t); });
       if (kind === "word" && isTerm && terms.length >= 3) {
-        wrong = shuffle(terms).filter(function (t) { return norm(t) !== norm(ans) && norm(t + "s") !== norm(ans) && lowerS.indexOf(t.toLowerCase()) === -1; })
-          .slice(0, 3).map(function (t) { return matchCase(t, ans); });
+        wrong = shuffle(terms).filter(function (t) { return norm(t) !== norm(ans) && !isPluralOf(ans, t) && !new RegExp("(^|[^A-Za-z])" + forms(t) + "(?![A-Za-z])", "i").test(s) &&
+            !terms.some(function (u) { return u !== t && new RegExp("(^|[^A-Za-z])" + forms(u) + "(?![A-Za-z])", "i").test(s) && new RegExp(forms(u), "i").test(t); }); })
+          .slice(0, 3).map(function (t) {
+            var plural = terms.some(function (x) { return isPluralOf(ans, x); });
+            return matchCase(plural && !/s$/i.test(t) ? pluralize(t) : t, ans);
+          });
       } else if (kind === "word") {
         wrong = wordDistractors(ans, pool.word, s);
       } else {
