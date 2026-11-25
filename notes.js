@@ -9,32 +9,40 @@
 (function () {
   var KEY = "nq-notes";
 
-  // sample notes for trying the tools out
+  // the built-in lesson: head vs. body (HTML-1). It loads the first time you visit,
+  // so the quiz, flashcards, and cheat sheet all teach it without any setup.
+  // {{answer|wrong|wrong|wrong}} marks a fill-in-the-blank: the right answer, then three wrong ones,
+  // all written by hand so every question has exactly one right answer.
   var SAMPLE = [
-    "# Accounting basics",
-    "Asset: something a business owns or controls that will bring it future benefit",
-    "Liability: an amount a business owes to someone else",
-    "Equity: the owners' claim on the business after liabilities are subtracted from assets",
-    "Revenue: money a business earns from selling goods or services",
-    "Expense: a cost a business uses up to earn revenue",
-    "Net income: revenue minus expenses for a period of time",
-    "Accounts receivable: money customers owe the business for things they already received",
-    "Accounts payable: money the business owes suppliers for things it already received",
-    "Depreciation: spreading the cost of a long-term asset over the years it gets used",
+    "# The big picture",
+    "Head: the part of a page that holds information about the page, which visitors don't see on the page itself",
+    "Body: the part of a page that holds everything visitors see, like headings, paragraphs, images, and links",
+    "Every HTML page has two main parts inside the <html> tag, the {{<head>|<footer>|<nav>|<title>}} and the <body>.",
+    "The <head> comes first, and the {{<body>|<html>|<footer>|<!DOCTYPE html>}} comes right after it.",
+    "A page should have only one {{<head>|<h2>|<img>|<p>}} and one <body>.",
+    "{{<!DOCTYPE html>|<html>|<head>|<title>}} is the very first line of every page and tells the browser the page uses HTML5.",
     "",
-    "# Financial statements",
-    "Assets always equal liabilities plus equity, which is called the accounting equation.",
-    "The balance sheet shows assets, liabilities, and equity on one date.",
-    "The income statement shows revenue and expenses over a period of time.",
-    "The statement of cash flows shows cash coming in and going out over a period of time.",
+    "# What goes in the head",
+    "<title>: the text that shows in the browser tab",
+    "Meta tag: a tag in the head that gives information about the page, like its character set or its author",
+    "Stylesheet link: the <link> tag in the head that connects a page to its CSS file",
+    "Nothing inside the head shows up on the page itself, but the text in the {{<title>|<meta>|<link>|<footer>}} shows up in the browser tab.",
+    "<meta charset=\"utf-8\"> tells the browser which {{character set|stylesheet|author|screen size}} the page uses, so letters and symbols show up correctly.",
+    "<meta name=\"author\" content=\"Matthew Parker\"> lists {{who made the page|the page's title|the stylesheet's file name|the menu links}}.",
+    "The <link rel=\"stylesheet\" href=\"styles.css\"> tag belongs in the {{head|body|footer|nav}} and connects the page to styles.css.",
+    "The viewport {{meta tag|footer|stylesheet link|title}} tells phones how to size the page to fit the screen.",
     "",
-    "# Debits and credits",
-    "Debit: an entry on the left side of an account",
-    "Credit: an entry on the right side of an account",
-    "Every journal entry has at least one debit and one credit, and total debits always equal total credits.",
-    "Debits increase assets and expenses.",
-    "Credits increase liabilities, equity, and revenue.",
-    "Accrual accounting records revenue when it's earned and expenses when they're incurred, not when cash changes hands."
+    "# What goes in the body",
+    "<nav>: the tag that holds a page's menu of links",
+    "<footer>: the tag at the bottom of a page for things like the author's name",
+    "Headings like <h1> and <h2> go in the {{body|head|title|meta tag}}.",
+    "Paragraphs, images, links, the menu, and the footer all go in the {{body|head|title|stylesheet link}}.",
+    "An <img> tag in the body shows an image, and its {{alt|href|charset|rel}} text describes the image.",
+    "",
+    "# Common mistakes",
+    "Putting the <title> in the body is a mistake, because the <title> belongs in the {{head|body|footer|nav}}.",
+    "Putting a heading or a paragraph in the head is a mistake, because anything visitors should see goes in the {{body|head|title|meta tag}}.",
+    "If the {{stylesheet link|title|author meta tag|footer}} is missing from the head, the page shows up in the browser's plain default styles instead of yours."
   ].join("\n");
 
   var NO_TERM_START = ["when", "if", "because", "since", "while", "to", "in", "on", "for", "after", "before", "so", "and", "but", "or",
@@ -66,32 +74,45 @@
     return defs.filter(function (d) { var k = norm(d.term); if (seen[k]) return false; seen[k] = true; return true; });
   }
 
-  // finds definitions ("Term: meaning" or "Term is meaning") and full sentences
+  // {{answer|wrong|wrong}} -> just the answer, for showing the sentence normally
+  var BLANK = /\{\{([^|}]+)((?:\|[^|}]+)*)\}\}/;
+  function plain(s) { return s.replace(/\{\{([^|}]+)(?:\|[^|}]+)*\}\}/g, "$1"); }
+
+  // finds definitions ("Term: meaning" or "Term is meaning"), full sentences,
+  // and hand-written blanks ({{answer|wrong|wrong}})
   function parse(text) {
-    var defs = [], sentences = [];
+    var defs = [], sentences = [], blanks = [];
     text.split(/\r?\n/).forEach(function (raw) {
       var isHeading = /^\s*#{1,6}\s/.test(raw);
       var line = cleanLine(raw);
       if (!line || isHeading) return;
+      var marked = line.indexOf("{{") !== -1;
 
       // "Term: definition", "Term - definition", "Term = definition"
-      var m = line.match(/^([^:=]{1,50}?)\s*(?::|\s[-–—]\s|\s=\s)\s*(.{8,})$/);
+      var m = marked ? null : line.match(/^([^:=]{1,50}?)\s*(?::|\s[-–—]\s|\s=\s)\s*(.{8,})$/);
       if (m && goodTerm(m[1]) && !/^\/\//.test(m[2])) { defs.push({ term: tidyTerm(m[1]), def: m[2].trim(), source: line }); return; }
 
       // "Term is/are/means/refers to definition"
-      m = line.match(/^(.{1,45}?)\s+(is|are|means|refers to|stands for)\s+(.{8,})$/i);
+      m = marked ? null : line.match(/^(.{1,45}?)\s+(is|are|means|refers to|stands for)\s+(.{8,})$/i);
       if (m && goodTerm(m[1]) && m[1].split(/\s+/).length <= 4) {
         defs.push({ term: tidyTerm(m[1]), def: m[3].replace(/[.]$/, "").trim(), verb: m[2].toLowerCase(), source: line });
         return;
       }
 
       // otherwise split into sentences
-      line.replace(/([.!?])\s+(?=[A-Z<"`(])/g, "$1\n").split("\n").forEach(function (s) {
+      line.replace(/([.!?])\s+(?=[A-Z<"`({])/g, "$1\n").split("\n").forEach(function (raw) {
+        var s = plain(raw).trim();
         var words = s.split(/\s+/).length;
-        if (words >= 5 && words <= 45) sentences.push(s.trim());
+        if (words < 5 || words > 45) return;
+        sentences.push(s);
+        var b = raw.match(BLANK);
+        if (b) {
+          var quote = plain(raw.replace(BLANK, "\u0000")).replace("\u0000", "_____").trim();
+          blanks.push({ sentence: s, quote: quote, answer: b[1].trim(), wrong: b[2].split("|").slice(1).map(function (w) { return w.trim(); }) });
+        }
       });
     });
-    return { defs: dedupe(defs), sentences: sentences };
+    return { defs: dedupe(defs), sentences: sentences, blanks: blanks };
   }
 
   // reads uploaded files as text. done(texts, skippedNames)
@@ -148,8 +169,10 @@
   function clearAllMissed() { setMissed([]); }
 
   function save(text) { try { localStorage.setItem(KEY, text); } catch (e) {} }
-  function saved() { try { return localStorage.getItem(KEY) || ""; } catch (e) { return ""; } }
+  function saved() {
+    try { var v = localStorage.getItem(KEY); return v === null ? SAMPLE : v; } catch (e) { return SAMPLE; }
+  }
 
-  window.Notes = { SAMPLE: SAMPLE, parse: parse, sections: sections, readFiles: readFiles, save: save, saved: saved, norm: norm,
+  window.Notes = { SAMPLE: SAMPLE, parse: parse, plain: plain, sections: sections, readFiles: readFiles, save: save, saved: saved, norm: norm,
     missed: missed, markMissed: markMissed, clearMissed: clearMissed, clearAllMissed: clearAllMissed };
 })();
