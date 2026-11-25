@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<!--
+  Author: Matthew Parker
+  GU username: mparker13
+  Course: BMIS 235 - HTML-4
+  Page: Flashcards, made from the same notes as the Notes Quiz
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="author" content="Matthew Parker">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flashcards</title>
+
+<!-- this one line connects the page to the stylesheet -->
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ===== MENU ===== same menu on every page ===== -->
+<nav>
+    <a href="index.html"><img src="img/home.png" alt="Home"></a>
+    <a href="quiz.html"><img src="img/quiz.png" alt="Notes Quiz"></a>
+    <a href="flashcards.html"><img src="img/flashcards.png" alt="Flashcards"></a>
+    <a href="cheatsheet.html"><img src="img/cheatsheet.png" alt="Cheat Sheet"></a>
+</nav>
+
+<h1>Flashcards</h1>
+<p>Every definition in your notes becomes a card. Flip it, then sort it: "Got it" or "Still learning." The cards you're still learning come back until you know them all. These use the same notes as the <a href="quiz.html">Notes Quiz</a>, so whatever you added there is already here.</p>
+
+<div class="fc">
+
+  <!-- ===== NOTES ===== -->
+  <section class="nq-panel" id="fc-setup">
+    <h2>Your notes</h2>
+    <div class="nq-upload">
+      <label class="nq-btn" for="fc-file">Upload notes</label>
+      <input type="file" id="fc-file" accept=".txt,.md,.html,.htm,.css,.csv,text/plain,text/markdown,text/html" multiple>
+      <button type="button" class="nq-btn nq-btn-light" id="fc-sample">Use sample notes</button>
+      <button type="button" class="nq-btn nq-btn-light" id="fc-clear">Clear</button>
+    </div>
+    <p class="nq-small">Cards come from definitions, one per line, like <code>Asset: something a business owns that will bring it future benefit</code> or <code>Revenue is the money a business earns</code>. For Word, Google Docs, or PDF notes, copy the text and paste it in.</p>
+    <textarea id="fc-notes" rows="10" spellcheck="false" placeholder="Paste your notes here, or upload a file.
+
+Asset: something a business owns that will bring it future benefit
+Liability: an amount a business owes to someone else"></textarea>
+    <div class="nq-file-msg" id="fc-file-msg" aria-live="polite"></div>
+    <div class="nq-row">
+      <label for="fc-front">Front of the card:</label>
+      <select id="fc-front">
+        <option value="term">Term</option>
+        <option value="def">Definition</option>
+      </select>
+      <button type="button" class="nq-btn" id="fc-make">Make my flashcards</button>
+    </div>
+    <div class="nq-report" id="fc-report" aria-live="polite"></div>
+  </section>
+
+  <!-- ===== STUDYING ===== -->
+  <section class="nq-panel" id="fc-study" hidden>
+    <div class="nq-top">
+      <span id="fc-progress"></span>
+      <span id="fc-counts"></span>
+    </div>
+    <div class="nq-bar"><div class="nq-bar-fill" id="fc-bar"></div></div>
+
+    <button type="button" class="fc-card" id="fc-card" aria-live="polite">
+      <span class="fc-inner">
+        <span class="fc-face fc-front">
+          <span class="fc-side" id="fc-front-label"></span>
+          <span class="fc-text" id="fc-front-text"></span>
+          <span class="fc-tap">Click or press Space to flip</span>
+        </span>
+        <span class="fc-face fc-back">
+          <span class="fc-side" id="fc-back-label"></span>
+          <span class="fc-text" id="fc-back-text"></span>
+        </span>
+      </span>
+    </button>
+
+    <div class="fc-sort" id="fc-sort" hidden>
+      <button type="button" class="fc-btn fc-btn-learning" id="fc-learning">&#10006; Still learning <kbd>1</kbd></button>
+      <button type="button" class="fc-btn fc-btn-got" id="fc-got">&#10004; Got it <kbd>2</kbd></button>
+    </div>
+
+    <div class="nq-row fc-bottom">
+      <button type="button" class="nq-btn nq-btn-light" id="fc-shuffle">Shuffle</button>
+      <button type="button" class="nq-btn nq-btn-light" id="fc-back-to-notes">Back to my notes</button>
+    </div>
+  </section>
+
+  <!-- ===== ROUND DONE ===== -->
+  <section class="nq-panel" id="fc-done" hidden>
+    <h2 id="fc-done-title"></h2>
+    <p id="fc-done-text"></p>
+    <div id="fc-learning-list"></div>
+    <div class="nq-row">
+      <button type="button" class="nq-btn" id="fc-again">Go again with the ones I'm still learning</button>
+      <button type="button" class="nq-btn nq-btn-light" id="fc-restart">Start over with every card</button>
+      <a class="nq-btn nq-btn-light" href="quiz.html">Quiz me on these</a>
+    </div>
+  </section>
+
+</div>
+
+<footer>Built by Matthew Parker &middot; BMIS 235 &middot; Study tools built with Claude (AI)</footer>
+
+<script src="notes.js"></script>
+<script>
+(function () {
+  function $(id) { return document.getElementById(id); }
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; }
+  function shuffle(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+  var ta = $("fc-notes");
+  var all = [];        // every card from the notes
+  var deck = [];       // cards in this round
+  var at = 0, flipped = false;
+  var got = [], learning = [];
+
+  function show(id) { ["fc-setup", "fc-study", "fc-done"].forEach(function (x) { $(x).hidden = x !== id; }); }
+
+  // ---------- making the cards ----------
+  function make() {
+    var report = $("fc-report");
+    report.className = "nq-report";
+    var text = ta.value;
+    if (!text.trim()) { report.textContent = "Add some notes first: paste them in, upload a file, or try the sample notes."; report.classList.add("is-bad"); return; }
+    Notes.save(text);
+    var defs = Notes.parse(text).defs;
+    if (!defs.length) {
+      report.textContent = "I couldn't find any definitions. Put each one on its own line, like “Term: what it means.”";
+      report.classList.add("is-bad");
+      return;
+    }
+    all = defs.map(function (d) { return { term: d.term, def: cap(d.def.replace(/\s+/g, " ")) }; });
+    report.textContent = "Made " + all.length + " card" + (all.length === 1 ? "" : "s") + " from your notes.";
+    startRound(shuffle(all));
+  }
+
+  // ---------- a round ----------
+  function startRound(cards) {
+    deck = cards; at = 0; got = []; learning = [];
+    show("fc-study");
+    render();
+    $("fc-study").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function render() {
+    var c = deck[at];
+    var termFirst = $("fc-front").value === "term";
+    flipped = false;
+    $("fc-card").classList.remove("is-flipped");
+    $("fc-front-label").textContent = termFirst ? "Term" : "Definition";
+    $("fc-back-label").textContent = termFirst ? "Definition" : "Term";
+    $("fc-front-text").textContent = termFirst ? c.term : c.def;
+    $("fc-back-text").textContent = termFirst ? c.def : c.term;
+    $("fc-front-text").className = "fc-text" + (termFirst ? " is-term" : "");
+    $("fc-back-text").className = "fc-text" + (termFirst ? "" : " is-term");
+    $("fc-card").setAttribute("aria-label", "Card " + (at + 1) + ". " + $("fc-front-text").textContent + ". Press to flip.");
+    $("fc-sort").hidden = true;
+    $("fc-progress").textContent = "Card " + (at + 1) + " of " + deck.length;
+    $("fc-counts").textContent = "Got it: " + got.length + " · Still learning: " + learning.length;
+    $("fc-bar").style.width = (at / deck.length * 100) + "%";
+  }
+
+  function flip() {
+    flipped = !flipped;
+    $("fc-card").classList.toggle("is-flipped", flipped);
+    if (flipped) {
+      $("fc-sort").hidden = false;
+      $("fc-card").setAttribute("aria-label", $("fc-back-text").textContent);
+    }
+  }
+
+  function sort(knowIt) {
+    if ($("fc-sort").hidden) return;
+    (knowIt ? got : learning).push(deck[at]);
+    if (at < deck.length - 1) { at++; render(); }
+    else done();
+  }
+
+  function done() {
+    show("fc-done");
+    $("fc-bar").style.width = "100%";
+    var list = $("fc-learning-list");
+    list.innerHTML = "";
+    if (!learning.length) {
+      $("fc-done-title").textContent = "You know all " + deck.length + " of these!";
+      $("fc-done-text").textContent = deck.length === all.length
+        ? "Nice. Try the Notes Quiz next to test yourself a different way."
+        : "That clears the ones you were still learning. Start over with every card to make sure they stick.";
+      $("fc-again").hidden = true;
+      return;
+    }
+    $("fc-again").hidden = false;
+    $("fc-done-title").textContent = "Got it: " + got.length + " · Still learning: " + learning.length;
+    $("fc-done-text").textContent = "Go through the ones you're still learning again until they stick:";
+    var ul = el("ul", "nq-missed-list");
+    learning.forEach(function (c) {
+      var li = el("li");
+      li.appendChild(el("strong", "", c.term));
+      li.appendChild(document.createTextNode(" — " + c.def));
+      ul.appendChild(li);
+    });
+    list.appendChild(ul);
+  }
+
+  // ---------- uploading ----------
+  function upload(files) {
+    var msg = $("fc-file-msg");
+    msg.className = "nq-file-msg";
+    Notes.readFiles(files, function (texts, skipped) {
+      if (texts.length) {
+        ta.value = (ta.value.trim() ? ta.value.trim() + "\n\n" : "") + texts.join("\n\n");
+        Notes.save(ta.value);
+      }
+      var parts = [];
+      if (texts.length) parts.push("Added " + texts.length + " file" + (texts.length === 1 ? "" : "s") + ".");
+      if (skipped.length) parts.push("Couldn't read " + skipped.join(", ") + ". For Word, Google Docs, or PDF, copy the text and paste it in.");
+      msg.textContent = parts.join(" ");
+      if (skipped.length) msg.classList.add("is-bad");
+    });
+  }
+
+  // ---------- buttons and keys ----------
+  $("fc-file").addEventListener("change", function () { upload(this.files); this.value = ""; });
+  ta.addEventListener("dragover", function (e) { e.preventDefault(); ta.classList.add("is-drop"); });
+  ta.addEventListener("dragleave", function () { ta.classList.remove("is-drop"); });
+  ta.addEventListener("drop", function (e) { if (e.dataTransfer && e.dataTransfer.files.length) { e.preventDefault(); ta.classList.remove("is-drop"); upload(e.dataTransfer.files); } });
+  ta.addEventListener("input", function () { Notes.save(ta.value); });
+  $("fc-sample").addEventListener("click", function () { ta.value = Notes.SAMPLE; Notes.save(ta.value); $("fc-file-msg").className = "nq-file-msg"; $("fc-file-msg").textContent = "Loaded the sample notes (accounting basics). Edit them or add your own."; });
+  $("fc-clear").addEventListener("click", function () { ta.value = ""; Notes.save(""); $("fc-report").textContent = ""; $("fc-file-msg").textContent = ""; ta.focus(); });
+  $("fc-make").addEventListener("click", make);
+
+  $("fc-card").addEventListener("click", flip);
+  $("fc-got").addEventListener("click", function () { sort(true); });
+  $("fc-learning").addEventListener("click", function () { sort(false); });
+  $("fc-shuffle").addEventListener("click", function () {
+    var rest = shuffle(deck.slice(at));
+    deck = deck.slice(0, at).concat(rest);
+    render();
+  });
+  $("fc-back-to-notes").addEventListener("click", function () { show("fc-setup"); });
+  $("fc-again").addEventListener("click", function () { startRound(shuffle(learning)); });
+  $("fc-restart").addEventListener("click", function () { startRound(shuffle(all)); });
+  $("fc-front").addEventListener("change", function () { if (!$("fc-study").hidden) render(); });
+
+  document.addEventListener("keydown", function (e) {
+    if ($("fc-study").hidden || /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) return;
+    var onButton = /BUTTON|A/.test(document.activeElement.tagName);
+    if (e.key === " " || e.key === "Enter") {
+      if (onButton) return;          // the focused button handles Space and Enter itself
+      e.preventDefault(); flip();
+    } else if (e.key === "ArrowUp" || e.key === "ArrowDown") { e.preventDefault(); flip(); }
+    else if (e.key === "1" || e.key === "ArrowLeft") { sort(false); }
+    else if (e.key === "2" || e.key === "ArrowRight") { sort(true); }
+  });
+
+  ta.value = Notes.saved();
+})();
+</script>
+
+</body>
+</html>
