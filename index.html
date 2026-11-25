@@ -3,14 +3,14 @@
   Author: Matthew Parker
   GU username: mparker13
   Course: BMIS 235 - HTML-4
-  Page: Home of the HTML Study Lab
+  Page: Home page for the Notes Quiz
 -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="author" content="Matthew Parker">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>HTML Study Lab</title>
+<title>Notes Quiz</title>
 
 <!-- this one line connects the page to the stylesheet -->
 <link rel="stylesheet" href="styles.css">
@@ -20,30 +20,31 @@
 <!-- ===== MENU ===== same menu on every page ===== -->
 <nav>
     <a href="index.html"><img src="img/home.png" alt="Home"></a>
-    <a href="selectors.html"><img src="img/selectors.png" alt="Selector Lab"></a>
     <a href="quiz.html"><img src="img/quiz.png" alt="Notes Quiz"></a>
-    <a href="cheatsheet.html"><img src="img/cheatsheet.png" alt="Cheat Sheet"></a>
 </nav>
 
-<h1>HTML Study Lab</h1>
-<p>I learn best by practicing and getting feedback right away, not by rereading notes. So I built this site to study HTML-1 through HTML-3 the way that works for me: try something, see exactly what went wrong, and try again.</p>
+<h1>Turn Your Notes Into a Quiz</h1>
+<p>I learn best by testing myself and finding out right away what I got wrong, not by rereading my notes. So I built a tool that does that for me: give it your class notes and it quizzes you on them.</p>
 
 <div class="home-cards">
-    <a class="home-card" href="selectors.html">
-        <span class="home-card-title">Selector Lab</span>
-        <span class="home-card-text">Type a CSS selector and watch the page light up with everything it matches. Beat 11 levels, from p to .menu-item em.</span>
-    </a>
-    <a class="home-card" href="quiz.html">
-        <span class="home-card-title">Notes Quiz</span>
-        <span class="home-card-text">Upload or paste your class notes and it turns them into a multiple-choice quiz, right in your browser.</span>
-    </a>
-    <a class="home-card" href="cheatsheet.html">
-        <span class="home-card-title">Cheat Sheet</span>
-        <span class="home-card-text">The main rules from HTML-1 to HTML-3 on one page, for when you get stuck.</span>
-    </a>
+    <div class="home-card">
+        <span class="home-card-title">1. Add your notes</span>
+        <span class="home-card-text">Upload a .txt, .md, or .html file, or paste notes from Word or Google Docs. Notes from any class work.</span>
+    </div>
+    <div class="home-card">
+        <span class="home-card-title">2. Take the quiz</span>
+        <span class="home-card-text">It turns your definitions and sentences into multiple-choice and fill-in-the-blank questions.</span>
+    </div>
+    <div class="home-card">
+        <span class="home-card-title">3. See what you missed</span>
+        <span class="home-card-text">Every answer shows the line from your notes it came from, and you can retry just the ones you got wrong.</span>
+    </div>
 </div>
 
-<footer>Built by Matthew Parker &middot; BMIS 235 &middot; Study tools built with Claude (AI)</footer>
+<p class="home-start"><a class="home-button" href="quiz.html">Start a quiz</a></p>
+<p>No notes handy? The quiz page has sample notes from BMIS 235 (HTML&#8209;1 to HTML&#8209;3) you can try it with. Your notes stay in your browser and aren't sent anywhere.</p>
+
+<footer>Built by Matthew Parker &middot; BMIS 235 &middot; Notes Quiz built with Claude (AI)</footer>
 
 </body>
 </html>
