@@ -3,14 +3,14 @@
   Author: Matthew Parker
   GU username: mparker13
   Course: BMIS 235 - HTML-4
-  Page: Home page for the Notes Quiz
+  Page: Home page for the study tools
 -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="author" content="Matthew Parker">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Notes Quiz</title>
+<title>Study Tools</title>
 
 <!-- this one line connects the page to the stylesheet -->
 <link rel="stylesheet" href="styles.css">
@@ -21,30 +21,31 @@
 <nav>
     <a href="index.html"><img src="img/home.png" alt="Home"></a>
     <a href="quiz.html"><img src="img/quiz.png" alt="Notes Quiz"></a>
+    <a href="flashcards.html"><img src="img/flashcards.png" alt="Flashcards"></a>
+    <a href="cheatsheet.html"><img src="img/cheatsheet.png" alt="Cheat Sheet"></a>
 </nav>
 
-<h1>Turn Your Notes Into a Quiz</h1>
-<p>I learn best by testing myself and finding out right away what I got wrong, not by rereading my notes. So I built a tool that does that for me: give it your class notes and it quizzes you on them.</p>
+<h1>Study Tools</h1>
+<p>I learn best by testing myself and finding out right away what I got wrong, not by rereading my notes. So I built a few tools that do that for me. Add your notes once and use them for both the quiz and the flashcards.</p>
 
 <div class="home-cards">
-    <div class="home-card">
-        <span class="home-card-title">1. Add your notes</span>
-        <span class="home-card-text">Upload a .txt, .md, or .html file, or paste notes from Word or Google Docs. Notes from any class work.</span>
-    </div>
-    <div class="home-card">
-        <span class="home-card-title">2. Take the quiz</span>
-        <span class="home-card-text">It turns your definitions and sentences into multiple-choice and fill-in-the-blank questions.</span>
-    </div>
-    <div class="home-card">
-        <span class="home-card-title">3. See what you missed</span>
-        <span class="home-card-text">Every answer shows the line from your notes it came from, and you can retry just the ones you got wrong.</span>
-    </div>
+    <a class="home-card" href="quiz.html">
+        <span class="home-card-title">Notes Quiz</span>
+        <span class="home-card-text">Upload or paste your notes from any class and get a multiple-choice and fill-in-the-blank quiz. Every answer shows the line from your notes it came from.</span>
+    </a>
+    <a class="home-card" href="flashcards.html">
+        <span class="home-card-title">Flashcards</span>
+        <span class="home-card-text">Every definition in your notes becomes a card. Flip it, sort it into "Got it" or "Still learning," and keep going until you know them all.</span>
+    </a>
+    <a class="home-card" href="cheatsheet.html">
+        <span class="home-card-title">Cheat Sheet</span>
+        <span class="home-card-text">The main rules from HTML-1 to HTML-3 in BMIS 235 on one page.</span>
+    </a>
 </div>
 
-<p class="home-start"><a class="home-button" href="quiz.html">Start a quiz</a></p>
-<p>No notes handy? The quiz page has sample notes from BMIS 235 (HTML&#8209;1 to HTML&#8209;3) you can try it with. Your notes stay in your browser and aren't sent anywhere.</p>
+<p>No notes handy? Both tools have sample notes on accounting basics you can try them with. Your notes stay in your browser and aren't sent anywhere.</p>
 
-<footer>Built by Matthew Parker &middot; BMIS 235 &middot; Notes Quiz built with Claude (AI)</footer>
+<footer>Built by Matthew Parker &middot; BMIS 235 &middot; Study tools built with Claude (AI)</footer>
 
 </body>
 </html>

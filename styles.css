@@ -1,5 +1,5 @@
 /* =====================================================================
-   styles.css  ·  Notes Quiz
+   styles.css  ·  Study Tools
    ---------------------------------------------------------------------
    Brand: Verdana font, ocean blue (#0077B6) main color,
    sunset orange (#F4A261) accent color.
@@ -54,6 +54,9 @@ footer {
     margin-top: 40px;
 }
 
+/* anything the page hides stays hidden, even if a rule below gives it a display */
+[hidden] { display: none !important; }
+
 /* =====================================================================
    Home page cards (index.html)
    ===================================================================== */
@@ -72,6 +75,11 @@ footer {
     border-radius: 12px;
     padding: 18px;
     color: #2b2b2b;
+}
+.home-card:hover, .home-card:focus-visible {
+    border-color: #F4A261;
+    box-shadow: 0 4px 0 #F4A261;
+    outline: none;
 }
 .home-start { text-align: center; }
 .home-button {
@@ -97,6 +105,31 @@ footer {
     margin-bottom: 8px;
 }
 .home-card-text { display: block; font-size: 16px; line-height: 1.5; }
+
+/* =====================================================================
+   Cheat Sheet (cheatsheet.html)
+   ===================================================================== */
+.cs { max-width: 820px; margin: 0 auto; }
+.cs-box {
+    background-color: #ffffff;
+    border: 2px solid #0077B6;
+    border-radius: 12px;
+    padding: 6px 22px 18px 22px;
+    margin: 20px 0;
+}
+.cs-box h2 { color: #0077B6; font-size: 22px; }
+.cs-box li { font-size: 16px; line-height: 1.6; margin: 6px 0; }
+.cs code { font-family: Menlo, Consolas, "Courier New", monospace; background-color: #eef4f8; padding: 1px 4px; border-radius: 4px; }
+.cs-code {
+    font-family: Menlo, Consolas, "Courier New", monospace;
+    background-color: #1e2a35;
+    color: #f2f2f2;
+    border-radius: 8px;
+    padding: 14px;
+    font-size: 14px;
+    line-height: 1.5;
+    overflow-x: auto;
+}
 
 /* =====================================================================
    Notes Quiz (quiz.html)
@@ -208,4 +241,88 @@ footer {
 
 @media (max-width: 560px) {
     h1 { font-size: 32px; }
+}
+
+/* =====================================================================
+   Flashcards (flashcards.html)
+   Uses the Notes Quiz panel and button styles, plus the card below.
+   ===================================================================== */
+.fc { max-width: 820px; margin: 0 auto; }
+.fc p { max-width: none; }
+
+/* the card flips in 3D: both faces sit in the same spot, the back starts turned around */
+.fc-card {
+    display: block;
+    width: 100%;
+    margin: 6px 0 0 0;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    perspective: 1200px;
+    font-family: Verdana, Geneva, sans-serif;
+}
+.fc-inner {
+    display: grid;
+    transition: transform 0.45s;
+    transform-style: preserve-3d;
+}
+.fc-card.is-flipped .fc-inner { transform: rotateY(180deg); }
+.fc-face {
+    grid-area: 1 / 1;
+    min-height: 240px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 28px 30px;
+    border-radius: 16px;
+    border: 3px solid #0077B6;
+    background-color: #ffffff;
+    box-shadow: 0 6px 0 #c9d9e5;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    box-sizing: border-box;
+}
+.fc-back {
+    transform: rotateY(180deg);
+    border-color: #F4A261;
+    background-color: #fffaf4;
+}
+.fc-card:focus-visible .fc-face { outline: 3px solid #F4A261; outline-offset: 3px; }
+.fc-side {
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #0077B6;
+}
+.fc-back .fc-side { color: #b5651d; }
+.fc-text { font-size: 20px; line-height: 1.5; color: #2b2b2b; text-align: center; }
+.fc-text.is-term { font-size: 30px; font-weight: bold; color: #0077B6; }
+.fc-tap { font-size: 12px; color: #888888; }
+
+.fc-sort { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 18px; }
+.fc-btn {
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 17px;
+    font-weight: bold;
+    padding: 12px;
+    border-radius: 10px;
+    border: 2px solid;
+    cursor: pointer;
+}
+.fc-btn kbd { font-family: inherit; font-size: 12px; font-weight: normal; opacity: 0.7; margin-left: 6px; }
+.fc-btn-learning { background-color: #fde2e1; border-color: #d1495b; color: #a4161a; }
+.fc-btn-got { background-color: #d8f3dc; border-color: #2d9a4b; color: #1b6b32; }
+.fc-btn:hover { filter: brightness(0.96); }
+.fc-btn:focus-visible { outline: 3px solid #F4A261; outline-offset: 2px; }
+.fc-bottom { justify-content: center; }
+.nq-row a.nq-btn { text-decoration: none; }
+
+@media (max-width: 560px) {
+    .fc-face { min-height: 200px; padding: 22px 18px; }
+    .fc-text.is-term { font-size: 24px; }
+    .fc-text { font-size: 17px; }
 }
