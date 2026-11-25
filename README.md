@@ -18,7 +18,7 @@ I went with Path 2 because I wanted to try building something with an AI that's 
 
 **What I made:** my HTML-3 site, which this repo started from. That includes the Home menu button I made in Excel and my brand in `styles.css`: ocean blue `#0077B6`, sunset orange `#F4A261`, and Verdana. I kept the brand for this site.
 
-For HTML-4 I made the decisions and the AI did the building. I chose head vs. body as the concept, told it I learn best by testing myself, and decided to turn the site into a learning tool instead of keeping my Hawaii food pages. I asked for a quiz, flashcards, and a cheat sheet that all work from the same notes, run without AI, and can take my own notes from any class. The AI tried a file-path trainer and a CSS selector game along the way. I cut both because they didn't fit how I study.
+For HTML-4 I made the decisions and the AI did the building. I told it I learn best by testing myself, and decided to turn the site into a learning tool instead of keeping my Hawaii food pages. I asked for a quiz, flashcards, and a cheat sheet that all work from the same notes, run without AI, and can take my own notes from any class. The AI tried a file-path trainer and a CSS selector game along the way, and I cut both. When I asked it to make the site match the rubric, it picked head vs. body as the concept and built that lesson into all three tools.
 
 **What AI made, and which tool:** Claude (Claude Code, connected to this repo) wrote and committed all of the HTML-4 code:
 - Took out the HTML-3 food pages, their menu images, and the flip cards
