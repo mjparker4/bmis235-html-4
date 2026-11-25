@@ -36,7 +36,7 @@ None of the tools use AI when you use them. The questions and cards are made by 
 **How I checked it works and teaches correctly:**
 - **Accuracy:** Claude checked every fact in the Head vs. Body lesson. The first version picked wrong answers automatically, and a review of every question it could make found real problems. Some questions had two right answers, like plain `<link>` and the full `<link rel="stylesheet">` both being offered for "____ belongs in the head." Another blanked "head" inside the word "heading." So every fill-in-the-blank in the lesson now has its right answer and three wrong answers written by hand, and each wrong answer was checked to make sure it's actually wrong.
 - **Everything works:** Claude tested all four pages in Chrome. Every page loads, every image shows up, every link on every page goes to a real page, and every page has the author meta tag and footer. It played the full quiz, the flashcards (mouse and keyboard), and the cheat sheet (search, the review filter, and printing). It also checked that misses in the quiz and flashcards get flagged on the cheat sheet, that uploading notes and using your own notes still works, and that everything fits a phone screen.
-- FILL IN: what you checked yourself on the live site
+- I tried all three tools myself on the live site: the Notes Quiz, the Flashcards, and the Cheat Sheet.
 
 Every change was committed with a message that describes it.
 
