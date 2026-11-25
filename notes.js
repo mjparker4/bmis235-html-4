@@ -2,9 +2,9 @@
   Author: Matthew Parker
   GU username: mparker13
   Course: BMIS 235 - HTML-4
-  File: notes.js, shared by the Notes Quiz and Flashcards pages.
+  File: notes.js, shared by the Notes Quiz, Flashcards, and Cheat Sheet pages.
   Reads notes (pasted or uploaded), finds the definitions and sentences in them,
-  and keeps the notes saved in this browser so both pages use the same ones.
+  and keeps the notes saved in this browser so every page uses the same ones.
 */
 (function () {
   var KEY = "nq-notes";
@@ -120,8 +120,36 @@
     });
   }
 
+  // splits notes at headings ("# Chapter 4") and parses each part, for the Cheat Sheet
+  function sections(text) {
+    var out = [], cur = { heading: "", lines: [] };
+    text.split(/\r?\n/).forEach(function (raw) {
+      var h = raw.match(/^\s*#{1,6}\s+(.+?)\s*#*\s*$/);
+      if (h) {
+        if (cur.lines.join("").trim()) out.push(cur);
+        cur = { heading: h[1].trim(), lines: [] };
+      } else {
+        cur.lines.push(raw);
+      }
+    });
+    if (cur.lines.join("").trim()) out.push(cur);
+    return out.map(function (sec) {
+      var p = parse(sec.lines.join("\n"));
+      return { heading: sec.heading, defs: p.defs, facts: p.sentences };
+    }).filter(function (sec) { return sec.defs.length || sec.facts.length; });
+  }
+
+  // what you missed in the quiz or are still learning in the flashcards, so the Cheat Sheet can flag it
+  var MISSED_KEY = "study-missed";
+  function missed() { try { return JSON.parse(localStorage.getItem(MISSED_KEY) || "[]"); } catch (e) { return []; } }
+  function setMissed(list) { try { localStorage.setItem(MISSED_KEY, JSON.stringify(list)); } catch (e) {} }
+  function markMissed(key) { key = norm(key); var l = missed(); if (l.indexOf(key) === -1) { l.push(key); setMissed(l); } }
+  function clearMissed(key) { key = norm(key); setMissed(missed().filter(function (k) { return k !== key; })); }
+  function clearAllMissed() { setMissed([]); }
+
   function save(text) { try { localStorage.setItem(KEY, text); } catch (e) {} }
   function saved() { try { return localStorage.getItem(KEY) || ""; } catch (e) { return ""; } }
 
-  window.Notes = { SAMPLE: SAMPLE, parse: parse, readFiles: readFiles, save: save, saved: saved, norm: norm };
+  window.Notes = { SAMPLE: SAMPLE, parse: parse, sections: sections, readFiles: readFiles, save: save, saved: saved, norm: norm,
+    missed: missed, markMissed: markMissed, clearMissed: clearMissed, clearAllMissed: clearAllMissed };
 })();

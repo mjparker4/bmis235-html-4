@@ -98,6 +98,7 @@ Liability: an amount a business owes to someone else"></textarea>
       <button type="button" class="nq-btn" id="fc-again">Go again with the ones I'm still learning</button>
       <button type="button" class="nq-btn nq-btn-light" id="fc-restart">Start over with every card</button>
       <a class="nq-btn nq-btn-light" href="quiz.html">Quiz me on these</a>
+      <a class="nq-btn nq-btn-light" href="cheatsheet.html">Review on the Cheat Sheet</a>
     </div>
   </section>
 
@@ -177,6 +178,7 @@ Liability: an amount a business owes to someone else"></textarea>
   function sort(knowIt) {
     if ($("fc-sort").hidden) return;
     (knowIt ? got : learning).push(deck[at]);
+    if (knowIt) Notes.clearMissed(deck[at].term); else Notes.markMissed(deck[at].term);  // flags it on the Cheat Sheet
     if (at < deck.length - 1) { at++; render(); }
     else done();
   }

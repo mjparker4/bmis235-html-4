@@ -98,6 +98,7 @@ The balance sheet shows assets, liabilities, and equity on one date."></textarea
       <button type="button" class="nq-btn" id="nq-retry">Retry the ones I missed</button>
       <button type="button" class="nq-btn nq-btn-light" id="nq-again">New quiz from the same notes</button>
       <button type="button" class="nq-btn nq-btn-light" id="nq-edit">Edit my notes</button>
+      <a class="nq-btn nq-btn-light" href="cheatsheet.html">Review on the Cheat Sheet</a>
     </div>
   </section>
 
@@ -222,6 +223,7 @@ The balance sheet shows assets, liabilities, and equity on one date."></textarea
       if (others.length >= 1 && Math.random() < 0.5) {
         qs.push({
           kind: "Which term is it?",
+          key: d.term,
           prompt: "Which term matches this description from your notes?",
           quote: cap(trimDef(d.def)),
           answer: d.term,
@@ -231,13 +233,14 @@ The balance sheet shows assets, liabilities, and equity on one date."></textarea
       } else if (others.length >= 1) {
         qs.push({
           kind: "What does it mean?",
+          key: d.term,
           prompt: "Which one describes “" + d.term + "”?",
           answer: cap(trimDef(d.def)),
           options: [cap(trimDef(d.def))].concat(shuffle(others).slice(0, 3).map(function (x) { return cap(trimDef(x.def)); })),
           source: d.source
         });
       } else {
-        qs.push({ kind: "Type the term", prompt: "What term is this describing?", quote: cap(trimDef(d.def)), answer: d.term, typed: true, source: d.source });
+        qs.push({ kind: "Type the term", key: d.term, prompt: "What term is this describing?", quote: cap(trimDef(d.def)), answer: d.term, typed: true, source: d.source });
       }
     });
 
@@ -279,9 +282,9 @@ The balance sheet shows assets, liabilities, and equity on one date."></textarea
       }
       usedAnswers[norm(ans)] = (usedAnswers[norm(ans)] || 0) + 1;
       if (wrong.length >= 2) {
-        qs.push({ kind: "Fill in the blank", prompt: "Fill in the blank:", quote: blanked, answer: shown, options: [shown].concat(wrong), source: s });
+        qs.push({ kind: "Fill in the blank", key: s, prompt: "Fill in the blank:", quote: blanked, answer: shown, options: [shown].concat(wrong), source: s });
       } else {
-        qs.push({ kind: "Fill in the blank", prompt: "Type the missing word or code:", quote: blanked, answer: shown, typed: true, source: s });
+        qs.push({ kind: "Fill in the blank", key: s, prompt: "Type the missing word or code:", quote: blanked, answer: shown, typed: true, source: s });
       }
     });
 
@@ -344,6 +347,7 @@ The balance sheet shows assets, liabilities, and equity on one date."></textarea
   function finishAnswer(ok, q) {
     answered = true;
     if (ok) right++; else missed.push(q);
+    if (q.key) { if (ok) Notes.clearMissed(q.key); else Notes.markMissed(q.key); }  // flags it on the Cheat Sheet
     $("nq-score").textContent = "Score: " + right;
     var fb = $("nq-feedback");
     fb.className = "nq-feedback " + (ok ? "is-good" : "is-bad");
