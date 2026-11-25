@@ -29,7 +29,7 @@ For HTML-4 I made the decisions and Claude did the building. I chose the Full AI
 
 **How I checked that everything works:**
 - Claude tested both pages in a headless Chrome browser. They load, every image shows up, the menu links work, and the Start a quiz button goes to the quiz.
-- Claude made quizzes from the built-in HTML notes, from messy, real-looking class notes, and from my accounting notes (assets, liabilities, equity), then read every question to check that the right answer was actually right and the wrong answers made sense. That testing turned up bugs that got fixed: a blank that left a stray "s" behind ("_____s"), plurals like "liabilitys", and wrong answers that repeated a word already in the sentence.
+- Claude made quizzes from the built-in HTML notes, from messy, real-looking class notes, and from sample accounting notes (assets, liabilities, equity), then read every question to check that the right answer was actually right and the wrong answers made sense. That testing turned up bugs that got fixed: a blank that left a stray "s" behind ("_____s"), plurals like "liabilitys", and wrong answers that repeated a word already in the sentence.
 - It also tested uploading a file, getting a clear message for a Word file it can't read, keeping the notes after a refresh, and going through a full quiz to the score screen.
 - FILL IN: what you checked yourself on the live site
 
