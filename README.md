@@ -46,6 +46,6 @@ Every change was committed with a message that describes it.
 
 **Why it's built for how I learn:** I learn by testing myself and finding out right away what I got wrong, not by rereading notes. So the lesson is all practice. The Notes Quiz gives me fill-in-the-blanks and "which term is it?" questions, and after every answer it shows the exact line from the lesson it came from, so I see what I missed while it's fresh. The Flashcards keep bringing back the cards I'm still learning until I know them all. The Cheat Sheet puts the whole lesson on one page with everything I missed flagged, so I know exactly what to review. I can also load my own notes from any class into all three.
 
-**Classmate tester:** FILL IN: first name of your Path 1 classmate
+**Classmate tester:** James
 
-**Change I made from their feedback:** FILL IN: what they said and what you changed
+**Change I made from their feedback:** James tested the site and said the quiz would be easier to read with a different font and background color. So the quiz now uses a cleaner, larger font with darker text. Questions sit on a light yellow background so they stand out from the answers, and the blank in each fill-in-the-blank shows as a blue line instead of underscores. The answer buttons are bigger, with white backgrounds and darker borders.
