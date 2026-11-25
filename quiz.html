@@ -330,7 +330,15 @@ The stylesheet link belongs in the head."></textarea>
     var box = $("nq-question");
     box.innerHTML = "";
     box.appendChild(el("p", "nq-prompt", q.prompt));
-    if (q.quote) box.appendChild(el("p", "nq-quote", q.quote));
+    if (q.quote) {
+      // show the blank as a box so it's easy to spot
+      var quote = el("p", "nq-quote");
+      q.quote.split("_____").forEach(function (part, i) {
+        if (i > 0) quote.appendChild(el("span", "nq-blank", "\u00A0"));
+        quote.appendChild(document.createTextNode(part));
+      });
+      box.appendChild(quote);
+    }
     var opts = $("nq-options");
     opts.innerHTML = "";
     if (q.typed) {
